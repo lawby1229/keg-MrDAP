@@ -2,6 +2,7 @@ package edu.thu.keg.mrdap.impl;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 
 import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.Platform;
@@ -36,16 +37,14 @@ public class PlatformImpl implements Platform {
 		p.crud();
 	}
 
-	void crud() {
+	public void crud() {
 
-		getDatasetManager()
-				.createDataset("1", "mro", "one", "ybz", "a1/sd", 10);
-		getDatasetManager()
-				.createDataset("2", "mro", "two", "ybz", "a2/sd", 20);
-		getDatasetManager().createDataset("3", "mro", "three", "ybz", "a4/sd",
-				30);
-		getDatasetManager().createDataset("3", "mrs", "three", "ybz", "a4/sd",
-				30);
+		getDatasetManager().createDataset("1", "1st", new Date(), "mro", "one",
+				"ybz", "a1/sd", 10);
+		getDatasetManager().createDataset("2", "2ed", new Date(), "mro", "two",
+				"ybz", "a2/sd", 20);
+		getDatasetManager().createDataset("3", "3rd", new Date(), "mro",
+				"three", "ybz", "a4/sd", 30);
 
 		getTaskManager().createTask(
 				"0",

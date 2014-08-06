@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -86,6 +87,7 @@ public class DatasetManagerImpl implements DatasetManager {
 	private void loadDataSets(String fileName) {
 		String f = fileName;
 		File Fi = new File(f);
+		System.out.println(Fi.getAbsolutePath());
 		Storage sto = (Storage) getXstream().fromXML(Fi);
 		for (Dataset ds : sto.datasets) {
 			addDataset(ds);
@@ -99,6 +101,7 @@ public class DatasetManagerImpl implements DatasetManager {
 		Storage sto = new Storage(datasets.values().toArray(new Dataset[0]));
 		fw = new OutputStreamWriter(new FileOutputStream(
 				Config.getDataSetFile()), "UTF-8");
+		System.out.println(Config.getDataSetFile());
 		getXstream().marshal(sto, new PrettyPrintWriter(fw));
 		fw.close();
 	}
@@ -129,13 +132,14 @@ public class DatasetManagerImpl implements DatasetManager {
 	 * java.lang.String, java.lang.String, java.lang.String, int)
 	 */
 	@Override
-	public void createDataset(String id, String type, String name,
-			String owner, String path, int sizeMb) {
+	public void createDataset(String id, String serial, Date date, String type,
+			String name, String owner, String path, int sizeMb) {
 		if (datasets.containsKey(id)) {
 			System.out.println(id + " dataset is already egxisted!");
 			return;
 		}
-		Dataset ds = new DatasetImpl(id, type, name, owner, path, sizeMb);
+		Dataset ds = new DatasetImpl(id, serial, date, type, name, owner, path,
+				sizeMb);
 		addDataset(ds);
 	}
 
