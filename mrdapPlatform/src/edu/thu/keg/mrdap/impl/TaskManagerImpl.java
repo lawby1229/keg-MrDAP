@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -93,13 +94,13 @@ public class TaskManagerImpl implements TaskManager {
 	@Override
 	public Collection<Task> getTaskList() {
 		// TODO Auto-generated method stub
-		return null;
+		return tasks.values();
 	}
 
 	@Override
 	public Task getTask(String id) {
 		// TODO Auto-generated method stub
-		return null;
+		return tasks.get(id);
 	}
 
 	/*
@@ -109,13 +110,14 @@ public class TaskManagerImpl implements TaskManager {
 	 * java.lang.String, java.lang.String, java.util.List)
 	 */
 	@Override
-	public void createTask(String id, String name, String owner,
+	public void createTask(String id, Date date, String name, String owner,
 			List<Dataset> datasets) {
 		if (tasks.containsKey(id)) {
 			System.out.println(id + " task is already egxisted!");
 			return;
 		}
-		Task ts = new TaskImpl(id, name, owner, TaskStatus.READY, datasets);
+		Task ts = new TaskImpl(id, date, name, owner, TaskStatus.READY,
+				datasets);
 		addTask(ts);
 	}
 

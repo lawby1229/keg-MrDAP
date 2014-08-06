@@ -48,6 +48,7 @@ public class PlatformImpl implements Platform {
 
 		getTaskManager().createTask(
 				"0",
+				new Date(),
 				"one-two",
 				"ybz",
 				Arrays.asList(getDatasetManager().getDatasetList().toArray(

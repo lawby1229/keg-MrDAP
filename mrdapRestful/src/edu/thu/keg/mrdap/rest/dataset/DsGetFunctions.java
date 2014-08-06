@@ -30,7 +30,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.sun.jersey.api.json.JSONWithPadding;
 
-import edu.thu.keg.mrdap.rest.classes.JDatasetName;
+import edu.thu.keg.mrdap.rest.classes.JDataset;
 import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.Platform;
 import edu.thu.keg.mrdap.dataset.Dataset;
@@ -69,24 +69,20 @@ public class DsGetFunctions {
 			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
 		log.info(uriInfo.getAbsolutePath());
 		session = httpServletRequest.getSession();
-		List<JDatasetName> datasetsName = new ArrayList<JDatasetName>();
-		JDatasetName datasetName = new JDatasetName();
+		List<JDataset> jdatasets = new ArrayList<JDataset>();
+
 		System.out.println(session.getId());
 		Platform p = (Platform) servletcontext.getAttribute("platform");
 		DatasetManager datasetManager = p.getDatasetManager();
 		Collection<Dataset> datasets = datasetManager.getDatasetList();
 		for (Dataset dataset : datasets) {
-			JDatasetName dname = new JDatasetName();
-			dname.setId(dataset.getId());
-			dname.setName(dataset.getName());
-			// dname.setOwner(dataset.getOwner());
-			dname.setType(dataset.getType());
-			dname.setDate(dataset.getDate());
-			datasetsName.add(dname);
+			JDataset dname = new JDataset(dataset);
+
+			jdatasets.add(dname);
 		}
-		return new JSONWithPadding(new GenericEntity<List<JDatasetName>>(
-				datasetsName) {
-		}, jsoncallback);
+		return new JSONWithPadding(
+				new GenericEntity<List<JDataset>>(jdatasets) {
+				}, jsoncallback);
 	}
 
 	@GET
@@ -96,8 +92,7 @@ public class DsGetFunctions {
 			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
 		log.info(uriInfo.getAbsolutePath());
 		session = httpServletRequest.getSession();
-		List<JDatasetName> datasetsName = new ArrayList<JDatasetName>();
-		JDatasetName datasetName = new JDatasetName();
+
 		System.out.println(session.getId());
 		Platform p = (Platform) servletcontext.getAttribute("platform");
 		DatasetManager datasetManager = p.getDatasetManager();
@@ -108,7 +103,7 @@ public class DsGetFunctions {
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(dataset.getDate());
 				String year = String.valueOf(calendar.get(Calendar.YEAR));
-				String month = String.valueOf(calendar.get(Calendar.MONTH)+1);
+				String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
 				String day = String
 						.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
 

@@ -2,6 +2,7 @@ package edu.thu.keg.mrdap;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import edu.thu.keg.mrdap.dataset.Dataset;
@@ -15,6 +16,6 @@ public interface TaskManager {
 
 	public void saveChanges() throws IOException;
 
-	public void createTask(String id, String name, String owner,
+	public void createTask(String id, Date date, String name, String owner,
 			List<Dataset> datasets);
 }
