@@ -7,8 +7,8 @@ mrdapPlatform/.classpath
 # Folder config file
 Desktop.ini
 *.class
-/.classpath
-/.project
+.classpath
+.project
 /.settings/
 /target
 # Recycle Bin used on file shares
