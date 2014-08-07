@@ -1,0 +1,34 @@
+<edu.thu.keg.mrdap.impl.DatasetManagerImpl_-Storage>
+  <datasets>
+    <edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
+      <id>3</id>
+      <date>2014-08-07 02:32:41.330 UTC</date>
+      <serial>1st</serial>
+      <type>mro</type>
+      <name>three</name>
+      <owner>ybz</owner>
+      <path>a4/sd</path>
+      <sizeMb>30</sizeMb>
+    </edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
+    <edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
+      <id>2</id>
+      <date>2014-08-07 02:32:41.330 UTC</date>
+      <serial>2ed</serial>
+      <type>mro</type>
+      <name>two</name>
+      <owner>ybz</owner>
+      <path>a2/sd</path>
+      <sizeMb>20</sizeMb>
+    </edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
+    <edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
+      <id>1</id>
+      <date>2014-08-07 02:32:41.329 UTC</date>
+      <serial>1st</serial>
+      <type>mro</type>
+      <name>one</name>
+      <owner>ybz</owner>
+      <path>a1/sd</path>
+      <sizeMb>10</sizeMb>
+    </edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
+  </datasets>
+</edu.thu.keg.mrdap.impl.DatasetManagerImpl_-Storage>

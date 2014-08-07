@@ -10,6 +10,8 @@ import org.eclipse.jdt.internal.compiler.ast.ArrayAllocationExpression;
 
 import edu.thu.keg.mrdap.dataset.Dataset;
 import edu.thu.keg.mrdap.task.Task;
+import edu.thu.keg.mrdap.task.impl.TaskStatus;
+import edu.thu.keg.mrdap.task.impl.TaskType;
 
 @XmlRootElement
 public class JTask {
@@ -18,6 +20,8 @@ public class JTask {
 	private Date date;
 	private String name;
 	private List<JDataset> jdatasets = new ArrayList<JDataset>();;
+	private TaskStatus taskstatus;
+	private TaskType tasktype;
 
 	public JTask() {
 
@@ -29,7 +33,8 @@ public class JTask {
 		// this.setJdatasets(task.getDatasets());
 		for (Dataset dataset : task.getDatasets())
 			jdatasets.add(new JDataset(dataset));
-
+		this.taskstatus = task.getStute();
+		this.tasktype = task.getType();
 	}
 
 	/**
@@ -99,6 +104,36 @@ public class JTask {
 	 */
 	public void setJdatasets(List<JDataset> jdatasets) {
 		this.jdatasets = jdatasets;
+	}
+
+	/**
+	 * @return the taskstatus
+	 */
+	public TaskStatus getTaskstatus() {
+		return taskstatus;
+	}
+
+	/**
+	 * @param taskstatus
+	 *            the taskstatus to set
+	 */
+	public void setTaskstatus(TaskStatus taskstatus) {
+		this.taskstatus = taskstatus;
+	}
+
+	/**
+	 * @return the tasktype
+	 */
+	public TaskType getTasktype() {
+		return tasktype;
+	}
+
+	/**
+	 * @param tasktype
+	 *            the tasktype to set
+	 */
+	public void setTasktype(TaskType tasktype) {
+		this.tasktype = tasktype;
 	}
 
 }

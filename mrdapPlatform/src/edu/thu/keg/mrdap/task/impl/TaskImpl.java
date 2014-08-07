@@ -13,14 +13,16 @@ public class TaskImpl implements Task {
 	private String owner = null;
 	private List<Dataset> datasets = null;
 	TaskStatus status = null;
+	TaskType type = null;
 
 	public TaskImpl(String id, Date date, String name, String owner,
-			TaskStatus status, List<Dataset> datasets) {
+			TaskStatus status, TaskType type, List<Dataset> datasets) {
 		this.id = id;
 		this.date = date;
 		this.name = name;
 		this.owner = owner;
 		this.status = status;
+		this.type = type;
 		this.datasets = datasets;
 	}
 
@@ -50,6 +52,28 @@ public class TaskImpl implements Task {
 	public Date getDate() {
 		// TODO Auto-generated method stub
 		return this.date;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.task.Task#getStute()
+	 */
+	@Override
+	public TaskStatus getStute() {
+		// TODO Auto-generated method stub
+		return this.status;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.task.Task#getType()
+	 */
+	@Override
+	public TaskType getType() {
+		// TODO Auto-generated method stub
+		return this.type;
 	}
 
 }

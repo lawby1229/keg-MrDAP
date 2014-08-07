@@ -21,6 +21,7 @@ import edu.thu.keg.mrdap.impl.DatasetManagerImpl.Storage;
 import edu.thu.keg.mrdap.task.Task;
 import edu.thu.keg.mrdap.task.impl.TaskImpl;
 import edu.thu.keg.mrdap.task.impl.TaskStatus;
+import edu.thu.keg.mrdap.task.impl.TaskType;
 
 public class TaskManagerImpl implements TaskManager {
 
@@ -117,7 +118,7 @@ public class TaskManagerImpl implements TaskManager {
 			return;
 		}
 		Task ts = new TaskImpl(id, date, name, owner, TaskStatus.READY,
-				datasets);
+				TaskType.TYPE1, datasets);
 		addTask(ts);
 	}
 

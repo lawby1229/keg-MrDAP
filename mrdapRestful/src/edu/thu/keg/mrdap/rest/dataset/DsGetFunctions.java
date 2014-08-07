@@ -106,7 +106,6 @@ public class DsGetFunctions {
 				String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
 				String day = String
 						.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-
 				if (!JsonBack.has(dataset.getType()))
 					JsonBack.put(dataset.getType(), new JSONObject());
 				JSONObject jserial = (JSONObject) JsonBack.get(dataset
