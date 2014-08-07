@@ -8,7 +8,6 @@ import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.Platform;
 import edu.thu.keg.mrdap.TaskManager;
 import edu.thu.keg.mrdap.dataset.Dataset;
-import fs.MFile;
 
 public class PlatformImpl implements Platform {
 	public PlatformImpl(String file) {
@@ -40,16 +39,15 @@ public class PlatformImpl implements Platform {
 
 	public void crud() {
 
-		MFile mf= new MFile("/mobile/mrf");
-		try {
-			mf.mkdir();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-//		ha
-		
-		
+		// MFile mf= new MFile("/mobile/mrf");
+		// try {
+		// mf.mkdir();
+		// } catch (IOException e1) {
+		// // TODO Auto-generated catch block
+		// e1.printStackTrace();
+		// }
+		// // ha
+
 		getDatasetManager().createDataset("1", "1st", new Date(), "mro", "one",
 				"ybz", "a1/sd", 10);
 		getDatasetManager().createDataset("2", "2ed", new Date(), "mro", "two",

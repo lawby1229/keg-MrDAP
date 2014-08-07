@@ -12,7 +12,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/ybz/GitHub/keg-MrDAP/libraries/fs/fs.jar"/>
 	<classpathentry kind="lib" path="/librariesMrdap/xstream/xstream-1.4.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Hadoop"/>
 	<classpathentry kind="output" path="bin"/>
