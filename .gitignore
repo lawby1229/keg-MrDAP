@@ -1,10 +1,16 @@
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
+mrdapPlatform/.classpath
+
 
 # Folder config file
 Desktop.ini
 *.class
+/.classpath
+/.project
+/.settings/
+/target
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
