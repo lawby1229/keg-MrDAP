@@ -1,15 +1,19 @@
 package edu.thu.keg.mrdap.impl;
 
+import hdfs.MFile;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.thoughtworks.xstream.XStream;
@@ -51,7 +55,8 @@ public class DatasetManagerImpl implements DatasetManager {
 			System.out
 					.println("(DatasetManagerImpl) Loading Dataset File Name: "
 							+ Config.getDataSetFile());
-			loadDataSets(Config.getDataSetFile());
+			loadXMLDatasets(Config.getDataSetFile());
+			loadHadoopDatasets();
 		} catch (Exception ex) {
 			// log.warn(ex.getMessage());
 
@@ -84,7 +89,7 @@ public class DatasetManagerImpl implements DatasetManager {
 		datasets.put(ds.getId(), ds);
 	}
 
-	private void loadDataSets(String fileName) {
+	private void loadXMLDatasets(String fileName) {
 		String f = fileName;
 		File Fi = new File(f);
 		System.out.println(Fi.getAbsolutePath());
@@ -95,8 +100,32 @@ public class DatasetManagerImpl implements DatasetManager {
 
 	}
 
+	private void loadHadoopDatasets() {
+
+		List<MFile> mfs = new ArrayList<MFile>();
+		MFile mf = new MFile("/mobile");
+		getAllMfiles(mf, mfs);
+	}
+
+	private void getAllMfiles(MFile mf, List<MFile> mfs) {
+
+		try {
+			if (!mf.isDirectory()) {
+				System.out.println(mf.getPath());
+				mfs.add(mf);
+				return;
+			}
+			for (MFile submf : mf.list()) {
+				getAllMfiles(submf, mfs);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	@Override
-	public void saveChanges() throws IOException {
+	public void saveXMLChanges() throws IOException {
 		Writer fw;
 		Storage sto = new Storage(datasets.values().toArray(new Dataset[0]));
 		fw = new OutputStreamWriter(new FileOutputStream(

@@ -14,7 +14,7 @@ public interface TaskManager {
 
 	public Task getTask(String id);
 
-	public void saveChanges() throws IOException;
+	public void saveXMLChanges() throws IOException;
 
 	public void createTask(String id, Date date, String name, String owner,
 			List<Dataset> datasets);

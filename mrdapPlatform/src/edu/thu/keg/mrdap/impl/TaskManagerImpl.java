@@ -76,7 +76,7 @@ public class TaskManagerImpl implements TaskManager {
 	}
 
 	@Override
-	public void saveChanges() throws IOException {
+	public void saveXMLChanges() throws IOException {
 		Writer fw;
 		Storage sto = new Storage(tasks.values().toArray(new Task[0]));
 		fw = new OutputStreamWriter(new FileOutputStream(Config.getTaskFile()),

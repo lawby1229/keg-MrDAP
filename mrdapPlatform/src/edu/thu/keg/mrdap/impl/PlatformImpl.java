@@ -62,10 +62,17 @@ public class PlatformImpl implements Platform {
 				"ybz",
 				Arrays.asList(getDatasetManager().getDatasetList().toArray(
 						new Dataset[0])));
+//		getTaskManager().createTask(
+//				"1",
+//				new Date(),
+//				"name2",
+//				"ybz",
+//				Arrays.asList(getDatasetManager().getDatasetList().toArray(
+//						new Dataset[0])));
 
 		try {
-			getDatasetManager().saveChanges();
-			getTaskManager().saveChanges();
+			getDatasetManager().saveXMLChanges();
+			getTaskManager().saveXMLChanges();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

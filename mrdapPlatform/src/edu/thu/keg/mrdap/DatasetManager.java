@@ -12,7 +12,7 @@ public interface DatasetManager {
 
 	public Dataset getDataset(String id);
 
-	public void saveChanges() throws IOException;
+	public void saveXMLChanges() throws IOException;
 
 	public void createDataset(String id, String serial, Date date, String type,
 			String name, String owner, String path, int sizeMb);
