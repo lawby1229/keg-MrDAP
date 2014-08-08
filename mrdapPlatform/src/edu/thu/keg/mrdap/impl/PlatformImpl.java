@@ -47,13 +47,13 @@ public class PlatformImpl implements Platform {
 		// e1.printStackTrace();
 		// }
 		// // ha
-
-		getDatasetManager().createDataset("1", "1st", new Date(), "mro", "one",
-				"ybz", "a1/sd", 10);
-		getDatasetManager().createDataset("2", "2ed", new Date(), "mro", "two",
-				"ybz", "a2/sd", 20);
-		getDatasetManager().createDataset("3", "1st", new Date(), "mro",
-				"three", "ybz", "a4/sd", 30);
+		getDatasetManager();
+//		getDatasetManager().createDataset("1", "1st", new Date(), "mro", "one",
+//				"ybz", "a1/sd", 10);
+//		getDatasetManager().createDataset("2", "2ed", new Date(), "mro", "two",
+//				"ybz", "a2/sd", 20);
+//		getDatasetManager().createDataset("3", "1st", new Date(), "mro",
+//				"three", "ybz", "a4/sd", 30);
 
 		getTaskManager().createTask(
 				"0",

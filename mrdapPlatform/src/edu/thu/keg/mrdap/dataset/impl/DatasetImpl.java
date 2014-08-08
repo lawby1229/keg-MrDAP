@@ -12,10 +12,10 @@ public class DatasetImpl implements Dataset {
 	private String name = null;
 	private String owner = null;
 	private String path = null;
-	private int sizeMb = 0;
+	private long sizeMb = 0;
 
 	public DatasetImpl(String id, String serial, Date date, String type,
-			String name, String owner, String path, int sizeMb) {
+			String name, String owner, String path, long sizeMb) {
 		this.id = id;
 		this.serial = serial;
 		this.date = date;
@@ -94,7 +94,7 @@ public class DatasetImpl implements Dataset {
 	 * @see edu.thu.keg.mrdap.dataset.Dataset#getSizeMb()
 	 */
 	@Override
-	public int getSizeMb() {
+	public long getSizeMb() {
 		// TODO Auto-generated method stub
 		return this.sizeMb;
 	}

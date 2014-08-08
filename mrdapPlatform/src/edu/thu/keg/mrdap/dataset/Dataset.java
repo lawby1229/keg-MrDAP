@@ -15,7 +15,7 @@ public interface Dataset {
 
 	public String getPath();
 
-	public int getSizeMb();
+	public long getSizeMb();
 	
 	
 }

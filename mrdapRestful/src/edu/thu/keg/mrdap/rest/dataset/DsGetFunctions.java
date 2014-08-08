@@ -86,6 +86,23 @@ public class DsGetFunctions {
 	}
 
 	@GET
+	@Path("/getds")
+	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
+	public JSONWithPadding getDatasetsNames(@QueryParam("id") String id,
+			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
+		log.info(uriInfo.getAbsolutePath());
+		session = httpServletRequest.getSession();
+
+		System.out.println(session.getId());
+		Platform p = (Platform) servletcontext.getAttribute("platform");
+		DatasetManager datasetManager = p.getDatasetManager();
+		Dataset dataset = datasetManager.getDataset(id);
+		JDataset jdataset = new JDataset(dataset);
+		return new JSONWithPadding(new GenericEntity<JDataset>(jdataset) {
+		}, jsoncallback);
+	}
+
+	@GET
 	@Path("/getalldss")
 	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
 	public JSONWithPadding getAllDatasets(

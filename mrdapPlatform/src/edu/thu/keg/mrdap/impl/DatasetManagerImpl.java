@@ -7,6 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,9 +18,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
+
+import org.apache.commons.net.nntp.NewsgroupInfo;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.basic.DateConverter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import edu.thu.keg.mrdap.DatasetManager;
@@ -55,7 +62,7 @@ public class DatasetManagerImpl implements DatasetManager {
 			System.out
 					.println("(DatasetManagerImpl) Loading Dataset File Name: "
 							+ Config.getDataSetFile());
-			loadXMLDatasets(Config.getDataSetFile());
+			// loadXMLDatasets(Config.getDataSetFile());
 			loadHadoopDatasets();
 		} catch (Exception ex) {
 			// log.warn(ex.getMessage());
@@ -67,6 +74,7 @@ public class DatasetManagerImpl implements DatasetManager {
 		if (xstream == null) {
 			xstream = new XStream(new StaxDriver());
 			// xstream.alias("Jdbc", JdbcProvider.class);
+			xstream.registerConverter(new DateConverter("yyyy-MM-dd", null));
 			// xstream.registerConverter(new AbstractSingleValueConverter() {
 
 			// @Override
@@ -103,8 +111,25 @@ public class DatasetManagerImpl implements DatasetManager {
 	private void loadHadoopDatasets() {
 
 		List<MFile> mfs = new ArrayList<MFile>();
-		MFile mf = new MFile("/mobile");
-		getAllMfiles(mf, mfs);
+		MFile mfile = new MFile("/mobile");
+		getAllMfiles(mfile, mfs);
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+		SimpleDateFormat smf = new SimpleDateFormat("yyyyMMdd");
+		for (MFile mf : mfs) {
+			MFile serial = new MFile(mf.getParent());
+			MFile type = new MFile(serial.getParent());
+			try {
+				createDataset(mf.getPath(), serial.getName(), new Date(smf
+						.parse(mf.getName()).getTime()), type.getName(),
+						mf.getName(), "admin", mf.getPath(), mf.totalSize());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void getAllMfiles(MFile mf, List<MFile> mfs) {
@@ -151,7 +176,7 @@ public class DatasetManagerImpl implements DatasetManager {
 	@Override
 	public Dataset getDataset(String id) {
 		// TODO Auto-generated method stub
-		return null;
+		return datasets.get(id);
 	}
 
 	/*
@@ -162,7 +187,7 @@ public class DatasetManagerImpl implements DatasetManager {
 	 */
 	@Override
 	public void createDataset(String id, String serial, Date date, String type,
-			String name, String owner, String path, int sizeMb) {
+			String name, String owner, String path, long sizeMb) {
 		if (datasets.containsKey(id)) {
 			System.out.println(id + " dataset is already egxisted!");
 			return;

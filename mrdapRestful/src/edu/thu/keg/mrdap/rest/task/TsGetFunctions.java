@@ -60,7 +60,7 @@ public class TsGetFunctions {
 	// rest/dsg/sql?db=?&user=?&password=?&sql=?
 
 	/**
-	 * get all dataset names list
+	 * get all tasks names list
 	 * 
 	 * @return a list including dataset names
 	 */
@@ -82,6 +82,31 @@ public class TsGetFunctions {
 			jtasks.add(jtask);
 		}
 		return new JSONWithPadding(new GenericEntity<List<JTask>>(jtasks) {
+		}, jsoncallback);
+	}
+
+	/**
+	 * get the id task
+	 * 
+	 * @param id
+	 * @param jsoncallback
+	 * @return
+	 */
+	@GET
+	@Path("/getts")
+	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
+	public JSONWithPadding getHistoryTasks(@QueryParam("id") String id,
+			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
+		log.info(uriInfo.getAbsolutePath());
+		session = httpServletRequest.getSession();
+		System.out.println(session.getId());
+		Platform p = (Platform) servletcontext.getAttribute("platform");
+		TaskManager taskManager = p.getTaskManager();
+		Task task = taskManager.getTask(id);
+
+		JTask jtask = new JTask(task);
+
+		return new JSONWithPadding(new GenericEntity<JTask>(jtask) {
 		}, jsoncallback);
 	}
 

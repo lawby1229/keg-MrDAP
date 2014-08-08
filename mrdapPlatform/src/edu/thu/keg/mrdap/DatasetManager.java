@@ -15,5 +15,5 @@ public interface DatasetManager {
 	public void saveXMLChanges() throws IOException;
 
 	public void createDataset(String id, String serial, Date date, String type,
-			String name, String owner, String path, int sizeMb);
+			String name, String owner, String path, long sizeMb);
 }
