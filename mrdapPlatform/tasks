@@ -1,35 +1,3 @@
 <edu.thu.keg.mrdap.impl.TaskManagerImpl_-Storage>
-  <tasks>
-    <edu.thu.keg.mrdap.task.impl.TaskImpl>
-      <id>0</id>
-      <name>one-two</name>
-      <owner>ybz</owner>
-      <datasets class="java.util.Arrays$ArrayList">
-        <a class="edu.thu.keg.mrdap.dataset.Dataset-array">
-          <edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
-            <id>3</id>
-            <name>three</name>
-            <owner>ybz</owner>
-            <path>a4/sd</path>
-            <sizeMb>30</sizeMb>
-          </edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
-          <edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
-            <id>2</id>
-            <name>two</name>
-            <owner>ybz</owner>
-            <path>a2/sd</path>
-            <sizeMb>20</sizeMb>
-          </edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
-          <edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
-            <id>1</id>
-            <name>one</name>
-            <owner>ybz</owner>
-            <path>a1/sd</path>
-            <sizeMb>10</sizeMb>
-          </edu.thu.keg.mrdap.dataset.impl.DatasetImpl>
-        </a>
-      </datasets>
-      <status>READY</status>
-    </edu.thu.keg.mrdap.task.impl.TaskImpl>
-  </tasks>
+  <tasks/>
 </edu.thu.keg.mrdap.impl.TaskManagerImpl_-Storage>
