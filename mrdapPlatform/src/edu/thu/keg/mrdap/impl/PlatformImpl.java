@@ -8,6 +8,7 @@ import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.Platform;
 import edu.thu.keg.mrdap.TaskManager;
 import edu.thu.keg.mrdap.dataset.Dataset;
+import edu.thu.keg.mrdap.task.impl.TaskType;
 
 public class PlatformImpl implements Platform {
 	public PlatformImpl(String file) {
@@ -48,27 +49,22 @@ public class PlatformImpl implements Platform {
 		// }
 		// // ha
 		getDatasetManager();
-//		getDatasetManager().createDataset("1", "1st", new Date(), "mro", "one",
-//				"ybz", "a1/sd", 10);
-//		getDatasetManager().createDataset("2", "2ed", new Date(), "mro", "two",
-//				"ybz", "a2/sd", 20);
-//		getDatasetManager().createDataset("3", "1st", new Date(), "mro",
-//				"three", "ybz", "a4/sd", 30);
+		// getDatasetManager().createDataset("1", "1st", new Date(), "mro",
+		// "one",
+		// "ybz", "a1/sd", 10);
+		// getDatasetManager().createDataset("2", "2ed", new Date(), "mro",
+		// "two",
+		// "ybz", "a2/sd", 20);
+		// getDatasetManager().createDataset("3", "1st", new Date(), "mro",
+		// "three", "ybz", "a4/sd", 30);
 
-		getTaskManager().createTask(
-				"0",
-				new Date(),
-				"one-two",
-				"ybz",
-				Arrays.asList(getDatasetManager().getDatasetList().toArray(
-						new Dataset[0])));
-//		getTaskManager().createTask(
-//				"1",
-//				new Date(),
-//				"name2",
-//				"ybz",
-//				Arrays.asList(getDatasetManager().getDatasetList().toArray(
-//						new Dataset[0])));
+		// getTaskManager().createTask(
+		// "1",
+		// new Date(),
+		// "name2",
+		// "ybz",
+		// Arrays.asList(getDatasetManager().getDatasetList().toArray(
+		// new Dataset[0])));
 
 		try {
 			getDatasetManager().saveXMLChanges();

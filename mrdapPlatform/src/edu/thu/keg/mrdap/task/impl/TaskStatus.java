@@ -1,6 +1,6 @@
 package edu.thu.keg.mrdap.task.impl;
 
 public enum TaskStatus {
-	RUNNING, READY, FINISH;
+	READY, RUNNING, SUCCEEDED, KILLED, FAILED;
 	// private int nStatus;
 }

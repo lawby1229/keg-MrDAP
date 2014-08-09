@@ -1,5 +1,7 @@
 package edu.thu.keg.mrdap.task.impl;
 
+import hdfs.MFile;
+
 import java.util.Date;
 import java.util.List;
 
@@ -7,24 +9,42 @@ import edu.thu.keg.mrdap.dataset.Dataset;
 import edu.thu.keg.mrdap.task.Task;
 
 public class TaskImpl implements Task {
-	private String id = null;
+	private String id = "undentifier";
 	private Date date = null;
 	private String name = null;
 	private String owner = null;
-	private List<Dataset> datasets = null;
+	private List<String> datasets = null;
+	private List<String> files = null;
+	private List<String> directorys = null;
+	private String outputPath = null;
 	TaskStatus status = null;
 	TaskType type = null;
 
-	public TaskImpl(String id, Date date, String name, String owner,
-			TaskStatus status, TaskType type, List<Dataset> datasets) {
-		this.id = id;
+	public TaskImpl(Date date, String name, String owner, TaskStatus status,
+			TaskType type, List<String> datasets, String outputPath) {
+
 		this.date = date;
 		this.name = name;
 		this.owner = owner;
 		this.status = status;
 		this.type = type;
 		this.datasets = datasets;
+		this.outputPath = outputPath;
 	}
+
+	// public TaskImpl(String id, Date date, String name, String owner,
+	// TaskStatus status, TaskType type, List<String> direcorys,
+	// List<String> files) {
+	// this.id = id;
+	// this.date = date;
+	// this.name = name;
+	// this.owner = owner;
+	// this.status = status;
+	// this.type = type;
+	// this.directorys = direcorys;
+	// this.files = files;
+	//
+	// }
 
 	@Override
 	public String getId() {
@@ -38,7 +58,7 @@ public class TaskImpl implements Task {
 	 * @see edu.thu.keg.mrdap.task.Task#getDatasets()
 	 */
 	@Override
-	public List<Dataset> getDatasets() {
+	public List<String> getDatasets() {
 		// TODO Auto-generated method stub
 		return this.datasets;
 	}
@@ -74,6 +94,69 @@ public class TaskImpl implements Task {
 	public TaskType getType() {
 		// TODO Auto-generated method stub
 		return this.type;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.task.Task#getOutputPath()
+	 */
+	@Override
+	public String getOutputPath() {
+		// TODO Auto-generated method stub
+		return this.outputPath;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public TaskStatus getStatus() {
+		return status;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.task.Task#run(java.lang.String)
+	 */
+	@Override
+	public void run(String id) {
+		this.id = id;
+		this.status = TaskStatus.RUNNING;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.task.Task#kill()
+	 */
+	@Override
+	public void kill() {
+		this.status = TaskStatus.KILLED;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.task.Task#fail()
+	 */
+	@Override
+	public void fail() {
+		this.status = TaskStatus.FAILED;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.task.Task#success()
+	 */
+	@Override
+	public void success() {
+		this.status = TaskStatus.SUCCEEDED;
+
 	}
 
 }

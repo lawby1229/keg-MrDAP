@@ -2,6 +2,7 @@ package edu.thu.keg.mrdap.rest.task;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -27,15 +28,19 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.mortbay.util.ajax.JSON;
 
 import com.sun.jersey.api.json.JSONWithPadding;
 
 import edu.thu.keg.mrdap.rest.classes.JTask;
 import edu.thu.keg.mrdap.task.Task;
+import edu.thu.keg.mrdap.task.impl.TaskStatus;
+import edu.thu.keg.mrdap.task.impl.TaskType;
 import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.Platform;
 import edu.thu.keg.mrdap.TaskManager;
 import edu.thu.keg.mrdap.dataset.Dataset;
+import edu.thu.keg.mrdap.impl.Config;
 
 @Path("/tsg")
 public class TsGetFunctions {
@@ -95,7 +100,7 @@ public class TsGetFunctions {
 	@GET
 	@Path("/getts")
 	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
-	public JSONWithPadding getHistoryTasks(@QueryParam("id") String id,
+	public JSONWithPadding getTask(@QueryParam("id") String id,
 			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
 		log.info(uriInfo.getAbsolutePath());
 		session = httpServletRequest.getSession();
@@ -107,6 +112,104 @@ public class TsGetFunctions {
 		JTask jtask = new JTask(task);
 
 		return new JSONWithPadding(new GenericEntity<JTask>(jtask) {
+		}, jsoncallback);
+	}
+
+	/**
+	 * get the id task
+	 * 
+	 * @param id
+	 * @param jsoncallback
+	 * @return
+	 */
+	@GET
+	@Path("/runtask")
+	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
+	public JSONWithPadding setAndRunTask(@QueryParam("type") String type,
+			@QueryParam("name") String name,
+			@QueryParam("datasets") String datasets,
+			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
+		log.info(uriInfo.getAbsolutePath());
+		session = httpServletRequest.getSession();
+		System.out.println(session.getId());
+		Platform p = (Platform) servletcontext.getAttribute("platform");
+		TaskManager taskManager = p.getTaskManager();
+		List<String> allPaths = new ArrayList<String>();
+		JSONArray jdatasets;
+		try {
+			jdatasets = new JSONArray(datasets);
+
+			for (int i = 0; i < jdatasets.length(); i++) {
+
+				allPaths.add(Config.getHadoopRoot() + jdatasets.getString(i));
+
+			}
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		Task task = taskManager.setTask(TaskType.valueOf(type), name, "admin",
+				allPaths);
+		String id = taskManager.runTask(task);
+
+		JTask jtask = new JTask(task);
+		return new JSONWithPadding(new GenericEntity<JTask>(jtask) {
+		}, jsoncallback);
+	}
+
+	@GET
+	@Path("/tstypes")
+	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
+	public JSONWithPadding getTaskTypes(
+			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
+		log.info(uriInfo.getAbsolutePath());
+		session = httpServletRequest.getSession();
+		System.out.println(session.getId());
+		List<String> types = new ArrayList<String>();
+		for (TaskStatus ts : TaskStatus.values()) {
+			types.add(ts.name());
+		}
+		System.out.println(types);
+		JSONArray ja = new JSONArray(types);
+		return new JSONWithPadding(new GenericEntity<String>(ja.toString()) {
+		}, jsoncallback);
+	}
+
+	/**
+	 * get the id task
+	 * 
+	 * @param id
+	 * @param jsoncallback
+	 * @return
+	 */
+	@GET
+	@Path("/killts")
+	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
+	public JSONWithPadding killTask(@QueryParam("id") String id,
+			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
+		log.info(uriInfo.getAbsolutePath());
+		session = httpServletRequest.getSession();
+		System.out.println(session.getId());
+		Platform p = (Platform) servletcontext.getAttribute("platform");
+		TaskManager taskManager = p.getTaskManager();
+		taskManager.killTask(id);
+		return new JSONWithPadding(new GenericEntity<Object>(null) {
+		}, jsoncallback);
+	}
+
+	@GET
+	@Path("/tsstate")
+	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
+	public JSONWithPadding getTaskState(@QueryParam("id") String id,
+			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
+		log.info(uriInfo.getAbsolutePath());
+		session = httpServletRequest.getSession();
+		System.out.println(session.getId());
+		Platform p = (Platform) servletcontext.getAttribute("platform");
+		TaskManager taskManager = p.getTaskManager();
+		TaskStatus ts = taskManager.getTaskInfo(id);
+		return new JSONWithPadding(new GenericEntity<String>(ts.name()) {
 		}, jsoncallback);
 	}
 

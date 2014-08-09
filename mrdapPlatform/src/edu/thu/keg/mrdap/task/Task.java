@@ -10,11 +10,21 @@ import edu.thu.keg.mrdap.task.impl.TaskType;
 public interface Task {
 	public String getId();
 
-	public List<Dataset> getDatasets();
+	public List<String> getDatasets();
 
 	public Date getDate();
 
 	public TaskStatus getStute();
 
 	public TaskType getType();
+
+	public String getOutputPath();
+
+	public void run(String id);
+
+	public void kill();
+
+	public void fail();
+
+	public void success();
 }

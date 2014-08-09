@@ -121,7 +121,8 @@ public class DatasetManagerImpl implements DatasetManager {
 			try {
 				createDataset(mf.getPath(), serial.getName(), new Date(smf
 						.parse(mf.getName()).getTime()), type.getName(),
-						mf.getName(), "admin", mf.getPath(), mf.totalSize());
+						mf.getName(), "admin", mf.getPath(), mf.totalSize(),
+						mf.isDirectory());
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -147,6 +148,33 @@ public class DatasetManagerImpl implements DatasetManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.DatasetManager#getAllFilesPath()
+	 */
+	@Override
+	public List<String> getAllFilesPath(String rootPath) {
+		List<String> re = null;
+		try {
+			MFile mRoot = new MFile(rootPath);
+			MFile[] mfs = mRoot.list();
+			re = new ArrayList<String>();
+
+			for (MFile mf : mfs) {
+				if (mf.isDirectory())
+					re.addAll(getAllFilesPath(mf.getPath()));
+				else
+					re.add(mf.getPath());
+
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return re;
 	}
 
 	@Override
@@ -182,18 +210,29 @@ public class DatasetManagerImpl implements DatasetManager {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see edu.thu.keg.mrdap.DatasetManager#containsDataset(java.lang.String)
+	 */
+	@Override
+	public boolean containsDataset(String id) {
+		// TODO Auto-generated method stub
+		return datasets.containsKey(id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see edu.thu.keg.mrdap.DatasetManager#createDataset(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, int)
 	 */
 	@Override
 	public void createDataset(String id, String serial, Date date, String type,
-			String name, String owner, String path, long sizeMb) {
+			String name, String owner, String path, long sizeMb, boolean isDic) {
 		if (datasets.containsKey(id)) {
 			System.out.println(id + " dataset is already egxisted!");
 			return;
 		}
 		Dataset ds = new DatasetImpl(id, serial, date, type, name, owner, path,
-				sizeMb);
+				sizeMb, isDic);
 		addDataset(ds);
 	}
 

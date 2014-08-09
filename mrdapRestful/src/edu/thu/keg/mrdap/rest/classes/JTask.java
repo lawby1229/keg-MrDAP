@@ -19,7 +19,7 @@ public class JTask {
 	private String id;
 	private Date date;
 	private String name;
-	private List<JDataset> jdatasets = new ArrayList<JDataset>();;
+	private List<String> jdatasets = new ArrayList<String>();;
 	private TaskStatus taskstatus;
 	private TaskType tasktype;
 
@@ -31,8 +31,8 @@ public class JTask {
 		this.id = task.getId();
 		this.date = task.getDate();
 		// this.setJdatasets(task.getDatasets());
-		for (Dataset dataset : task.getDatasets())
-			jdatasets.add(new JDataset(dataset));
+		for (String dataset : task.getDatasets())
+			jdatasets.add(dataset);
 		this.taskstatus = task.getStute();
 		this.tasktype = task.getType();
 	}
@@ -85,7 +85,7 @@ public class JTask {
 	/**
 	 * @return the datasets
 	 */
-	public List<JDataset> getJdatasets() {
+	public List<String> getJdatasets() {
 		return jdatasets;
 	}
 
@@ -102,7 +102,7 @@ public class JTask {
 	 * @param jdatasets
 	 *            the jdatasets to set
 	 */
-	public void setJdatasets(List<JDataset> jdatasets) {
+	public void setJdatasets(List<String> jdatasets) {
 		this.jdatasets = jdatasets;
 	}
 

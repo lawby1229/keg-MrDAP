@@ -13,9 +13,10 @@ public class DatasetImpl implements Dataset {
 	private String owner = null;
 	private String path = null;
 	private long sizeMb = 0;
+	private boolean isDic = false;
 
 	public DatasetImpl(String id, String serial, Date date, String type,
-			String name, String owner, String path, long sizeMb) {
+			String name, String owner, String path, long sizeMb, boolean isDic) {
 		this.id = id;
 		this.serial = serial;
 		this.date = date;
@@ -24,7 +25,7 @@ public class DatasetImpl implements Dataset {
 		this.owner = owner;
 		this.path = path;
 		this.sizeMb = sizeMb;
-
+		this.isDic = isDic;
 	}
 
 	@Override
@@ -97,6 +98,13 @@ public class DatasetImpl implements Dataset {
 	public long getSizeMb() {
 		// TODO Auto-generated method stub
 		return this.sizeMb;
+	}
+
+	/**
+	 * @return the isDic
+	 */
+	public boolean isDic() {
+		return this.isDic;
 	}
 
 }

@@ -50,4 +50,8 @@ public final class Config {
 	public static String getTaskFile() {
 		return getProperty("TaskFile");
 	}
+
+	public static String getHadoopRoot() {
+		return getProperty("HadoopRoot");
+	}
 }
