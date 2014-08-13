@@ -28,6 +28,8 @@ public final class Config {
 
 	public static void init(String file) throws IOException {
 		Config.file = file;
+		File f = new File(".");
+		System.out.println("config " + f.getAbsolutePath());
 		InputStream is = new FileInputStream(file);
 		prop = new Properties();
 		prop.loadFromXML(is);

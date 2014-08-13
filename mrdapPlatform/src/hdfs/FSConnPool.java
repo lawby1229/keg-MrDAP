@@ -9,18 +9,20 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
+import env.Default;
+
 
 
 public class FSConnPool
 {
 
-	private static final String ADDR=Default.DEFALUT_FS_URL ;
 	private static final Configuration conf = new Configuration();
-	private static FSConnPool fscpp=new FSConnPool(); 
-	private static int closed=0;
+	private static final FSConnPool fscpp=new FSConnPool(); 
 
 	 static
 	{
+		 
+		 	String ADDR=Default.getValue("HDFS_URL") ;
 			conf.set("fs.defaultFS",ADDR );
 	}
 	 

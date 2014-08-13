@@ -167,7 +167,7 @@ public class TsGetFunctions {
 		session = httpServletRequest.getSession();
 		System.out.println(session.getId());
 		List<String> types = new ArrayList<String>();
-		for (TaskStatus ts : TaskStatus.values()) {
+		for (TaskType ts : TaskType.values()) {
 			types.add(ts.name());
 		}
 		System.out.println(types);
@@ -194,22 +194,60 @@ public class TsGetFunctions {
 		Platform p = (Platform) servletcontext.getAttribute("platform");
 		TaskManager taskManager = p.getTaskManager();
 		taskManager.killTask(id);
-		return new JSONWithPadding(new GenericEntity<Object>(null) {
+		JSONObject job = new JSONObject();
+		try {
+			job.put("id", id);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new JSONWithPadding(new GenericEntity<String>(job.toString()) {
 		}, jsoncallback);
 	}
 
 	@GET
-	@Path("/tsstate")
+	@Path("/rmts")
 	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
-	public JSONWithPadding getTaskState(@QueryParam("id") String id,
+	public JSONWithPadding removeTask(@QueryParam("id") String id,
 			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
 		log.info(uriInfo.getAbsolutePath());
 		session = httpServletRequest.getSession();
 		System.out.println(session.getId());
 		Platform p = (Platform) servletcontext.getAttribute("platform");
 		TaskManager taskManager = p.getTaskManager();
+		taskManager.removeTask(id);
+		JSONObject job = new JSONObject();
+		try {
+			job.put("id", id);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new JSONWithPadding(new GenericEntity<String>(job.toString()) {
+		}, jsoncallback);
+	}
+
+	@GET
+	@Path("/tsstatus")
+	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
+	public JSONWithPadding getTaskState(@QueryParam("id") String id,
+			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
+		log.info(uriInfo.getAbsolutePath());
+		session = httpServletRequest.getSession();
+		System.out.println(session.getId() + "1");
+		Platform p = (Platform) servletcontext.getAttribute("platform");
+		System.out.println(session.getId() + "2");
+		TaskManager taskManager = p.getTaskManager();
+		System.out.println(session.getId() + "3");
 		TaskStatus ts = taskManager.getTaskInfo(id);
-		return new JSONWithPadding(new GenericEntity<String>(ts.name()) {
+		JSONObject job = new JSONObject();
+		try {
+			job.put("taskstatus", ts.name());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new JSONWithPadding(new GenericEntity<String>(job.toString()) {
 		}, jsoncallback);
 	}
 

@@ -16,11 +16,11 @@ import java.util.List;
 
 import org.codehaus.jettison.json.JSONException;
 
-import task.FinalStatus;
-import task.State;
-import task.TaskExecutor;
-import task.TaskQuery;
-import task.TaskQuery.TaskInfo;
+import taskClient.TaskClient;
+import taskQuery.FinalStatus;
+import taskQuery.State;
+import taskQuery.TaskQuery;
+import taskQuery.TaskQuery.TaskInfo;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
@@ -164,10 +164,21 @@ public class TaskManagerImpl implements TaskManager {
 		for (String path : task.getDatasets()) {
 			pathAll = pathAll + "," + path;
 		}
-		String appId = "WCLOVELQ";
-		// TaskExecutor.submit("pagerank.PageRank", 6, 4, 8, 8,
-		// "./spark-kmeans-10.jar", pathAll, task.getOutputPath());
+		String appId = "WCLOVELQ" + System.currentTimeMillis();
+		try {
+			appId = TaskClient.submit("pagerank.PageRank", 6, 4, 8, 8,
+					"/home/hadoop/slib/spark-kmeans-10.jar", "", "", "");
+			// TaskExecutor.submit("pagerank.PageRank", 6, 4, 8, 8,
+			// "./spark-kmeans-10.jar", pathAll, task.getOutputPath());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// 运行该任务，更新task id
 		task.run(appId);
+		// 从hadoop得到任务运行状态，并更新task的状态
+		getTaskInfo(appId);
+		// 将hadoop的任务添加到tasks前台虚拟任务集中
 		addTask(task);
 		try {
 			saveXMLChanges();
@@ -191,7 +202,27 @@ public class TaskManagerImpl implements TaskManager {
 	@Override
 	public void killTask(String id) {
 		tasks.get(id).kill();
+		TaskClient.kill(id);
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.TaskManager#removeTask(java.lang.String)
+	 */
+	@Override
+	public void removeTask(String id) {
+		// TODO Auto-generated method stub
+		if (tasks.containsKey(id)) {
+			tasks.remove(id);
+			try {
+				saveXMLChanges();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/*
@@ -202,14 +233,18 @@ public class TaskManagerImpl implements TaskManager {
 	@Override
 	public TaskStatus getTaskInfo(String id) {
 		// TODO Auto-generated method stub
+		if (!tasks.containsKey(id))
+			return null;
 		Task task = tasks.get(id);
+
 		try {
+			System.out.println("获取任务状态id： " + id);
 			TaskInfo ti = TaskQuery.getTaskInfo(id);
 			if (ti.getState().equals(State.RUNNING.name()))
 				task.run(id);
 			else if (ti.getState().equals(State.KILLED.name()))
 				task.kill();
-			else if (ti.getState().equals(State.FINISHED)) {
+			else if (ti.getState().equals(State.FINISHED.name())) {
 				if (ti.getFinalStatus().equals(FinalStatus.SUCCEEDED.name())) {
 					task.success();
 				} else if (ti.getFinalStatus()

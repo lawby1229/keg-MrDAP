@@ -1,7 +1,5 @@
 package edu.thu.keg.mrdap.init;
 
-import hdfs.Default;
-
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
@@ -12,6 +10,8 @@ import javax.servlet.annotation.WebListener;
 import org.apache.log4j.Logger;
 
 import edu.thu.keg.mrdap.impl.PlatformImpl;
+import env.Default;
+
 
 /**
  * 启动服务器时候的初始化server
@@ -38,10 +38,12 @@ public class ServerInitial implements ServletContextListener {
 		// // TODO Auto-generated catch block
 		// e.printStackTrace();
 		// }
+
 		ServletContext sc = arg0.getServletContext();
 		String P_Config = ResourceBundle.getBundle("platform_initial")
 				.getString("PlatformImpl_CONFIG");
-		Default.initHadoop();
+		Default.initDefault(arg0.getServletContext().getRealPath(
+				"/WEB-INF/" + "default.xml"));
 		PlatformImpl p = new PlatformImpl(arg0.getServletContext().getRealPath(
 				"/WEB-INF/" + P_Config));
 

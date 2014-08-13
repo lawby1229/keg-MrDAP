@@ -1,0 +1,133 @@
+Detail.addTimeline = function(){
+	var cntr = $("#dtfragment-2");
+	var datepicker = $("<div></div>");
+	datepicker.appendTo(cntr);
+	datepicker.attr("id","dt-datepicker");
+	datepicker.datepicker({
+		changeYear: true,
+		changeMonth: true
+	});
+	
+	var selector = $("<div></div>");
+	selector.appendTo(cntr);
+	span = $("<span></span>");
+	span.appendTo(selector);
+	span.html("选择时间段:&nbsp;&nbsp;&nbsp;&nbsp;");
+	$.getJSON(URL.getTimeList())
+		.done(function(data){
+//			console.log(data);
+			var min = data["start time"];
+			var max = data["end time"];
+			var temp = min.split("-");
+			datepicker.datepicker("option","minDate",new Date(temp[0],temp[1] - 1,temp[2]));
+			temp = max.split("-");
+			datepicker.datepicker("option","maxDate",new Date(temp[0],temp[1] - 1,temp[2]));
+			
+			span = $("<span></span>");
+			span.appendTo(selector);
+			span.html("起始时间:&nbsp;&nbsp;");
+			
+			var input = $("<input/>");
+			input.appendTo(selector);
+			input.attr("type","text");
+			input.attr("value",min);
+			input.bind("click",function(){
+				if(datepicker.css("display") === "none"){
+					var offset = input.offset();
+					console.log( "left: " + offset.left + ", top: " + offset.top );
+					datepicker.css({
+						"display": "block"
+					});
+				}else{
+					datepicker.css("display","none");
+				}
+			});
+			
+			span = $("<span></span>");
+			span.appendTo(selector);
+			span.html("结束时间:&nbsp;&nbsp;");
+			
+			input = $("<input/>");
+			input.appendTo(selector);
+			input.attr("type","text");
+			input.attr("value",max);
+			input.bind("click",function(){
+				if(datepicker.css("display") === "none"){
+					var offset = input.offset();
+					console.log( "left: " + offset.left + ", top: " + offset.top );
+					datepicker.css({
+						"display": "block"
+					});
+				}else{
+					datepicker.css("display","none");
+				}
+			});
+		}).fail(function(){
+			alert("Oops, we got an error...");
+		});
+};
+
+#dt-datepicker{
+	position: absolute;
+	display: none;
+}
+
+#dt-datepicker .ui-datepicker{
+	font-size: 40%;
+}
+
+Dataset.loadList = function(){
+	$.getJSON(URL.getDatasetList())
+		.done(function(data){
+//			console.log(data);
+			//Dataset.loadLevel(data,"dslist","list");
+			Dataset.loadLevel(data,"dslist","checkbox");
+		}).fail(function(){
+			alert("Oops, we got an error...");
+		});
+};
+
+Dataset.loadLevel = function(data,ul_id,type){
+	var ul = $("#" + ul_id);
+	var keys = Object.keys(data);
+//	console.log(keys.length);
+	for(var i = 0; i < keys.length; i++){
+		var a;
+		if(type === "list"){
+			a = $("<a href = 'javascript:void(0)' onclick = 'Dataset.showList(\"" + ul_id + "-" + i + "\")'>" + keys[i] + "</a><br/>");
+		}else if(type === "checkbox"){
+			a = $("<input type = 'checkbox' value = '" + keys[i] + "'/><a href = 'javascript:void(0)' onclick = 'Dataset.showList(\"" + ul_id + "-" + i + "\")'>" + keys[i] + "</a><br/>");
+		}
+		var ul_sub = $("<ul id = '" + ul_id + "-" + i + "'></ul>");
+		a.appendTo(ul);
+		ul_sub.appendTo(ul);
+		
+		var value = data[keys[i]];
+//		console.log(value);
+		if(Common.isArray(value)){
+			for(var j = 0; j < value.length; j++){
+				var a;
+				if(type === "list"){
+					a = $("<a href = 'javascript:void(0)' onclick = 'Dataset.showTable(\"" + value[j].id + "\")'>" + value[j].name + "</a>");
+				}else if(type === "checkbox"){
+					a = $("<input type = 'checkbox' value = '" + value[j].name + "'/><a href = 'javascript:void(0)' onclick = 'Dataset.showTable(\"" + value[j].id + "\")'>" + value[j].name + "</a>");
+				}
+				var li = $("<li></li>");
+				a.appendTo(li);
+				li.appendTo(ul_sub);
+			}
+		}else{
+			Dataset.loadLevel(value,ul_id + "-" + i,type);
+		}
+	}
+};
+
+Dataset.showList = function(ul_id){
+	var ul = $("#" + ul_id);
+//	console.log(ul.css("display"));
+	if(ul.css("display") == "block"){
+		ul.css("display","none");
+	}else{
+		ul.css("display","block");
+	}
+};

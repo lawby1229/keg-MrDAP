@@ -9,6 +9,8 @@ import java.util.List;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 
+import env.Default;
+
 public class MFile
 {
 	private Path path=null;
@@ -20,7 +22,7 @@ public class MFile
 			this.path=new Path(path);
 
 		}else{
-			this.path=new Path(Default.DEFALUT_FS_URL+path);
+			this.path=new Path(Default.getValue("HDFS_URL")+path);
 		}
 	}
 	
@@ -49,7 +51,7 @@ public class MFile
 			this.path=path;
 		}else
 		{
-			this.path=new Path(Default.DEFALUT_FS_URL+path.toString());
+			this.path=new Path(Default.getValue("HDFS_URL")+path.toString());
 		}
 		
 	}

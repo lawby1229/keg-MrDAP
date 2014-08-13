@@ -30,5 +30,7 @@ public interface TaskManager {
 
 	public void killTask(String id);
 
+	public void removeTask(String id);
+
 	public TaskStatus getTaskInfo(String id);
 }

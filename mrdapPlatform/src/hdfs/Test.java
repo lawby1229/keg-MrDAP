@@ -11,14 +11,11 @@ public class Test
 	public static void main(String[] args) throws IOException
 	{
 		
-		MFile mf=new MFile(File.separator+"mobile"+File.separator+"ssss");
+		MFile mf=new MFile("/mobile");
+	
+		println(mf);
 		
-		System.out.println(mf.getParent());
-		
-		
-		
-		
-		
+	
 		
 	}
 	

@@ -1,0 +1,138 @@
+body{
+	margin: 0;
+}
+
+#main{
+	position: relative;
+}
+
+/*****div#header*****/
+
+#header{
+	height: 125px;
+	background-color: #282828;
+}
+
+#title{
+	padding-top: 20px;
+	padding-left: 80px;
+	font-size: 45px;
+	font-family: Times New Roman,'微软雅黑';
+	color: #ff8040;
+}
+
+/*****div#dataset*****/
+
+#dataset,#detail,#task{
+	float: left;
+	font-size: 16px;
+	font-family: Times New Roman,'楷体';
+}
+
+#dataset{
+	width: 270px;
+	padding-left: 50px;
+}
+
+#dstitle,#tstitle{
+	height: 29px;
+	margin-top: 10px;
+	padding-top: 10px;
+	text-align: center;
+	border-top: 1px solid #282828;
+	border-right: 1px solid #282828;
+	border-left: 1px solid #282828;
+}
+
+#dstree,#tslist{
+	margin: 0;
+	padding: 10px 15px;
+	border: 1px solid #282828;
+	overflow: auto;
+}
+
+/*****div#detail*****/
+
+#detail{
+	padding-left: 25px;
+}
+
+/*****div#task*****/
+
+#task{
+	width: 400px;
+	padding-left: 25px;
+}
+
+#tstitle{
+	position: relative;
+}
+
+#tstitle a{
+	position: absolute;
+	left: 320px;
+	text-decoration: none;
+}
+
+#tstitle a:link,a:hover,a:visited{
+	color: green;
+}
+
+#tstitle img{
+	position: absolute;
+	top: 12px;
+	left: 300px;
+	width: 15px;
+	cursor: pointer;
+}
+
+#tslist{
+	text-align: center;
+}
+
+#tslist a:link,a:hover,a:visited{
+	color: red;
+}
+
+/*****div#footer*****/
+
+#footer{
+	padding: 10px 0;
+	background-color: #282828;
+	text-align: center;
+	font-size: 16px;
+	font-family: Times New Roman,'楷体';
+	font-weight: lighter;
+	color: #cccccc;
+}
+
+#footer a{
+	text-decoration: none;/*添加到文本的修饰*/
+}
+
+#footer a:link,a:hover,a:visited{
+	color: green;
+}
+
+/*****special div#window*****/
+
+#window{
+	position: absolute;
+	top: 100px;
+	width: 270px;
+	margin: 0;
+	padding: 10px 15px;
+	overflow: auto;
+	background-color: white;
+	border: 1px solid #282828;
+	z-index: 1000;
+	display: none;
+}
+
+#window img{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 15px;
+	cursor: pointer;
+}
