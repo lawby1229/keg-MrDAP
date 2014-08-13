@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -88,6 +90,18 @@ public class FSConnPool
 		{
 			return fs.exists(f);
 		}
+		
+		public FSDataOutputStream create(Path f, boolean overwrite) throws IOException
+		{
+			return fs.create(f, overwrite);
+			
+		}
+		
+		public  FSDataInputStream open(Path f) throws IOException
+		{
+			return fs.open(f);
+		}
+		
 		
 		public  FileStatus getFileStatus(Path f) throws IOException
 		{

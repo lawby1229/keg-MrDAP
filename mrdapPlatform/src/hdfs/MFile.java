@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 
@@ -204,6 +206,45 @@ public class MFile
 		hdfs.close();
 		
 		return b;
+	}
+	
+	public  String getOwner() throws IOException
+	{
+		HDFS hdfs=FSConnPool.getHDFS();
+
+		FileStatus fileStatus=hdfs.getFileStatus(path);
+		String owner=fileStatus.getOwner();
+		hdfs.close();
+		return owner;
+	}
+	
+	public String getPermission() throws IOException
+	{
+		HDFS hdfs=FSConnPool.getHDFS();
+		FileStatus fileStatus=hdfs.getFileStatus(path);
+		String perm=fileStatus.getPermission().toString();
+		hdfs.close();
+		return perm;
+		
+	}
+	
+	public FSDataInputStream open() throws IOException
+	{
+		HDFS hdfs=FSConnPool.getHDFS();
+		FSDataInputStream dis=hdfs.open(path);
+		hdfs.close();
+		
+		return dis;
+	}
+	
+	public FSDataOutputStream create(Path f, boolean overwrite) throws IOException 
+	{
+		HDFS hdfs=FSConnPool.getHDFS();
+		FSDataOutputStream dos=hdfs.create(f, overwrite);
+	
+		hdfs.close();
+		
+		return dos;
 	}
 	
 	

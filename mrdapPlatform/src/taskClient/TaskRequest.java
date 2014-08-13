@@ -55,7 +55,7 @@ public class TaskRequest {
 		String content = "";
 		BufferedReader br = null;
 		try {
-			post.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+			post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 
 			HttpResponse response = httpClient.execute(post);
 			// 先从响应头得到实体
@@ -72,7 +72,7 @@ public class TaskRequest {
 				}
 			
 				//System.out.println(temp);
-				content += temp + "";
+				content += temp;
 
 			}
 

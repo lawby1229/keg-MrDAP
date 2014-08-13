@@ -18,7 +18,8 @@ public class Default {
 	private static final Default def = new Default();
 
 	public static String getValue(String key) {
-		// if (conf == null) {
+		// if(conf==null)
+		// {
 		// initDefault();
 		// }
 		return conf.get(key);
