@@ -1,7 +1,8 @@
 $(document).ready(function(){
-	Common.loadStyle();
+	console.log("version 1.1");
+	Common.setStyle();
 	URL.head = Common.getURL();
-	console.log("async: false");
+//	console.log("async: false");
 	Common.loadDataset();
 	Common.loadTabs();
 	Common.loadTask();
@@ -14,7 +15,7 @@ Common = {};
 Common.refresh_id = -1;
 
 Common.refreshInterval = function(){
-	return 2000;
+	return 5000;
 };
 
 /*****distinguish array & object*****/
@@ -27,7 +28,7 @@ Common.isObject = function(what){
 	return Object.prototype.toString.call(what) === '[object Object]';
 };
 
-/*****float window*****/
+/*****open & close window*****/
 
 Common.openWindow = function(){
 	$("#window").css("display","block");
@@ -39,7 +40,7 @@ Common.closeWindow = function(){
 
 /*****document loading*****/
 
-Common.loadStyle = function(){
+Common.setStyle = function(){
 	var height = $(document).height() - 165;
 	var width = $(document).width() - 900;
 	if(height < 400){
@@ -54,6 +55,9 @@ Common.loadStyle = function(){
 	});
 	$("#dataset").css({
 		"height": height
+	});
+	$("#dstree").css({
+		"height": height - 82
 	});
 	$("#detail").css({
 		"height": height,
@@ -80,7 +84,7 @@ Common.getURL = function(){
 	var url = "";
 	$.ajax({url: "settings.json",async: false,dataType: "json"})
 		.done(function(data){
-			console.log(data.url);
+//			console.log(data.url);
 			url = data.url;
 		}).fail(function(){
 			alert("Oops, we got an error...");
@@ -98,6 +102,4 @@ Common.loadTabs = function(){
 
 Common.loadTask = function(){
 	Task.loadList();
-	Common.refresh_id = window.setInterval("Task.refreshList()",Common.refreshInterval());
-//	console.log(Common.refresh_id);
 };

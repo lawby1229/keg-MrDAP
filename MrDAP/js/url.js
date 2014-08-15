@@ -22,6 +22,10 @@ URL.getTaskType = function(){
 	return URL.head + "/rest/tsg/tstypes";
 };
 
+URL.getTaskStatus = function(){
+	return URL.head + "/rest/tsg/tsstatus";
+};
+
 URL.runTask = function(){
 	return URL.head + "/rest/tsg/runtask";
 };
@@ -32,8 +36,4 @@ URL.stopTask = function(){
 
 URL.removeTask = function(){
 	return URL.head + "/rest/tsg/rmts";
-};
-
-URL.getTaskStatus = function(){
-	return URL.head + "/rest/tsg/tsstatus";
 };

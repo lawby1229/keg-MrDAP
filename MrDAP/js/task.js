@@ -1,5 +1,7 @@
 Task = {};
 
+/*****load task list*****/
+
 Task.loadList = function(){
 	$("#tslist").empty();
 	$.getJSON(URL.getTaskList() + "?jsoncallback=?")
@@ -12,54 +14,91 @@ Task.loadList = function(){
 			}
 //			console.log(tsdata);
 			
-			google.load("visualization","1",{packages:["table"],"callback":drawTable});
-			function drawTable(){
-				var data = new google.visualization.DataTable();
-				data.addColumn('string',"创建日期");
-				data.addColumn('string',"类别");
-				data.addColumn('string',"状态");
-				data.addColumn('string',"操作");
-				
-				var array = $.parseJSON("[]");
-				if(tsdata.length === 0){
-					array[0] = $.parseJSON("[]");
-					array[0][0] = "/";
-					array[0][1] = "/";
-					array[0][2] = "<span id = 'empty_tslist'>/</span>";
-					array[0][3] = "/";
-				}else if(Common.isObject(tsdata)){
-					array[0] = $.parseJSON("[]");
-					Task.bulidArray(tsdata,array[0]);
-				}else{
-					for(var i = 0; i < tsdata.length; i++){
-						array[i] = $.parseJSON("[]");
-						Task.bulidArray(tsdata[i],array[i]);
+			var table = $("<table></table>");
+			table.attr("id","tslist-table");
+			table.attr("class","display");
+			table.appendTo("#tslist");
+			var thead = $("<thead></thead>");
+			thead.appendTo(table);
+			var tbody = $("<tbody></tbody>");
+			tbody.appendTo(table);
+			
+			var tr = $("<tr></tr>");
+			tr.appendTo(thead);
+			var title = ["创建日期","类别","状态","操作"];
+			for(var i = 0; i < 4; i++){
+				var th = $("<th></th>");
+				th.appendTo(tr);
+				th.text(title[i]);
+			}
+			
+			if(tsdata.length === 0){
+				tr = $("<tr></tr>");
+				tr.appendTo(tbody);
+				for(var i = 0; i < 4; i++){
+					var td = $("<td></td>");
+					td.appendTo(tr);
+					if(i === 2){
+						var span = $("<span></span>");
+						span.attr("id","empty_tslist");
+						span.appendTo(td);
+						span.text("/");
+					}else{
+						td.text("/");
 					}
 				}
-//				console.log(array);
-				
-				data.addRows(array);
-				var table = new google.visualization.Table(document.getElementById("tslist"));
-				table.draw(data, {showRowNumber: true, allowHtml: true});
-				$("#tslist .google-visualization-table-th:contains(操作)").css({
-					"width": "90px"
-				});
+			}else if(Common.isObject(tsdata)){
+				tr = $("<tr></tr>");
+				tr.appendTo(tbody);
+				Task.bulidRow(tsdata,tr);
+			}else{
+				for(var i = 0; i < tsdata.length; i++){
+					tr = $("<tr></tr>");
+					tr.appendTo(tbody);
+					Task.bulidRow(tsdata[i],tr);
+				}
 			}
+			
+			$("#tslist-table").DataTable();
+			
+//			console.log(Common.refresh_id);
+			if(Common.refresh_id != -1){
+				window.clearInterval(Common.refresh_id);
+			}
+			Common.refresh_id = window.setInterval("Task.refreshList()",Common.refreshInterval());
+//			console.log(Common.refresh_id);
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
 };
 
-Task.bulidArray = function(data,array){
-	array[0] = data.date;
-	array[1] = data.tasktype;
-	array[2] = "<span id = '" + data.id + "'>" + data.taskstatus + "</span>";
-	array[3] = "<input type = 'button' value = '查看' onclick = 'Task.showDetail(\"" + data.id + "\",\"open\")'/>";
-	array[3] += "&nbsp;<input type = 'button' value = '删除' onclick = 'Task.remove(\"" + data.id + "\")'/>";
+/*****create a row*****/
+
+Task.bulidRow = function(data,tr){
+	var td = $("<td></td>");
+	td.appendTo(tr);
+	td.text(data.date);
+	
+	td = $("<td></td>");
+	td.appendTo(tr);
+	td.text(data.tasktype);
+	
+	td = $("<td></td>");
+	td.appendTo(tr);
+	td.html("<span id = '" + data.id + "'>" + data.taskstatus + "</span>");
+	
+	td = $("<td></td>");
+	td.appendTo(tr);
+	var html = "<input type = 'button' value = '查看' onclick = 'Task.showDetail(\"" + data.id + "\",\"open\")'/>";
 	if(data.taskstatus === "RUNNING"){
-		array[3] += "<br/><input type = 'button' value = '中止' onclick = 'Task.stop(\"" + data.id + "\")'/>";
+		html += "<input type = 'button' value = '中止' onclick = 'Task.stop(\"" + data.id + "\")'/>";
+	}else{
+		html += "<input type = 'button' value = '删除' onclick = 'Task.remove(\"" + data.id + "\")'/>";
 	}
+	td.html(html);
 };
+
+/*****show task detail info*****/
 
 Task.showDetail = function(ts_id,status){
 //	console.log(ts_id);
@@ -76,39 +115,71 @@ Task.showDetail = function(ts_id,status){
 			title.attr("class","dtfragment-2-title");
 			title.appendTo(cntr);
 			title.text("详细信息");
-			var tstable = $("<div></div>");
-			tstable.appendTo(cntr);
-			tstable.attr("id","tstable");
+			var table_cntr = $("<div></div>");
+			table_cntr.appendTo(cntr);
+			table_cntr.attr("id","tstable-cntr");
 			
-			google.load("visualization","1",{packages:["table"],"callback":drawTable});
-			function drawTable(){
-				var data = new google.visualization.DataTable();
-				data.addColumn('string',"创建日期");
-				data.addColumn('string',"ID");
-				data.addColumn('string',"类别");
-				data.addColumn('string',"状态");
-				data.addColumn('string',"操作");
-				
-				var array = $.parseJSON("[]");
-				array[0] = $.parseJSON("[]");
-				array[0][0] = tsdata.date;
-				array[0][1] = tsdata.id;
-				array[0][2] = tsdata.tasktype;
-				array[0][3] = "<span id = '" + tsdata.id + "'>" + tsdata.taskstatus + "</span>";
-				array[0][4] = "<input type = 'button' value = '删除' onclick = 'Task.remove(\"" + tsdata.id + "\")'/>";
-				if(tsdata.taskstatus === "RUNNING"){
-					array[0][4] += "&nbsp;<input type = 'button' value = '中止' onclick = 'Task.stop(\"" + tsdata.id + "\")'/>";
-				}
-//				console.log(array);
-				
-				data.addRows(array);
-				var table = new google.visualization.Table(document.getElementById("tstable"));
-				table.draw(data,{allowHtml: true});
+			var table = $("<table></table>");
+			table.attr("id","tstable");
+			table.attr("class","display");
+			table.appendTo(table_cntr);
+			var thead = $("<thead></thead>");
+			thead.appendTo(table);
+			var tbody = $("<tbody></tbody>");
+			tbody.appendTo(table);
+			
+			var tr = $("<tr></tr>");
+			tr.appendTo(thead);
+			var title = ["创建日期","ID","类别","状态","操作"];
+			for(var i = 0; i < 5; i++){
+				var th = $("<th></th>");
+				th.appendTo(tr);
+				th.text(title[i]);
 			}
+			
+			tr = $("<tr></tr>");
+			tr.appendTo(tbody);
+			var td = $("<td></td>");
+			td.appendTo(tr);
+			td.text(tsdata.date);
+			
+			td = $("<td></td>");
+			td.appendTo(tr);
+			td.text(tsdata.id);
+			
+			td = $("<td></td>");
+			td.appendTo(tr);
+			td.text(tsdata.tasktype);
+			
+			td = $("<td></td>");
+			td.appendTo(tr);
+			td.html("<span id = '" + tsdata.id + "'>" + tsdata.taskstatus + "</span>");
+			
+			td = $("<td></td>");
+			td.appendTo(tr);
+			var html = "";
+			if(tsdata.taskstatus === "RUNNING"){
+				html = "<input type = 'button' value = '中止' onclick = 'Task.stop(\"" + tsdata.id + "\")'/>";
+			}else{
+				html = "<input type = 'button' value = '删除' onclick = 'Task.remove(\"" + tsdata.id + "\")'/>";
+			}
+			/*****task done, download file*****/
+			if(tsdata.taskstatus === ""){
+			}
+			td.html(html);
+			
+			$("#tstable").DataTable({
+				searching: false,
+				ordering: false,
+				paging: false,
+				info: false
+			});
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
 };
+
+/*****create task*****/
 
 Task.create = function(){
 	var cntr = $("#dtfragment-2");
@@ -122,6 +193,9 @@ Task.create = function(){
 	var selector = $("<table></table>");
 	selector.attr("class","dtfragment-2-selector");
 	selector.appendTo(cntr);
+	selector.css({
+		"width": cntr.width()
+	});
 	
 	var tr = $("<tr></tr>");
 	tr.appendTo(selector);
@@ -162,6 +236,21 @@ Task.create = function(){
 			td.appendTo(tr);
 			td.html("<input type = 'button' value = '打开数据集列表' onclick = 'Common.openWindow()'/>");
 			
+			tr = $("<tr></tr>");
+			tr.appendTo(selector);
+			td = $("<td></td>");
+			td.appendTo(tr);
+			td.html("参数:");
+			td = $("<td></td>");
+			td.appendTo(tr);
+			var width = cntr.width() - selector.find("tr").eq(0).find("td").eq(0).width() - 46;
+			console.log(width)
+			var textarea = $("<textarea rows = '5'></textarea>");
+			textarea.appendTo(td);
+			textarea.css({
+				"width": width
+			});
+			
 			var button = $("<input type = 'button' value = '执行任务' onclick = 'Task.run()'/>");
 			button.appendTo(cntr);
 		}).fail(function(){
@@ -169,6 +258,8 @@ Task.create = function(){
 		});
 	Task.loadDslist();
 };
+
+/*****load dataset list as checkbox*****/
 
 Task.loadDslist = function(){
 	var window = $("#window");
@@ -185,6 +276,8 @@ Task.loadDslist = function(){
 	img.attr("src","css/images/close_256x256.png");
 	img.attr("onclick","Common.closeWindow()");
 };
+
+/*****run task*****/
 
 Task.run = function(){
 	var type = $("input[name='dtfragment-2-task-type']:checked").val();
@@ -208,21 +301,22 @@ Task.run = function(){
 	});
 //	console.log(datasets);
 	
-	$.getJSON(URL.runTask() + "?jsoncallback=?" + "&type=" + type + "&datasets=" + JSON.stringify(datasets))
+	var tr = $("#dtfragment-2").children("table").children("tbody").children("tr").eq(2);
+	var param = tr.children("td").eq(1).children("textarea").val();
+//	console.log(param);
+	$.getJSON(URL.runTask() + "?jsoncallback=?" + "&type=" + type + "&datasets=" + JSON.stringify(datasets) + "&param=" + param)
 		.done(function(data){
 //			console.log(data);
 			alert("成功新建任务!");
 			Common.closeWindow();
 			Task.loadDslist();
 			Task.loadList();
-//			console.log(Common.refresh_id);
-			window.clearInterval(Common.refresh_id);
-			Common.refresh_id = window.setInterval("Task.refreshList()",Common.refreshInterval());
-//			console.log(Common.refresh_id);
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
 };
+
+/*****get dataset file path*****/
 
 Task.getPath = function(node_id){
 	var node_text = [];
@@ -234,21 +328,29 @@ Task.getPath = function(node_id){
 	return node_text;
 };
 
+/*****refresh task list*****/
+
 Task.refreshList = function(){
-	var tr = $("#tslist").children("div").children("div").eq(0).children("table").children("tbody").children("tr");
-	for(var i = 1; i < tr.length; i++){
+	var tr = $("#tslist").children("div").children("table").children("tbody").children("tr");
+	if(tr.eq(0).children("td").length === 1){
+		return;
+	}
+	for(var i = 0; i < tr.length; i++){
 		Task.refreshStatus(i);
 	}
 };
 
+/*****refresh task status*****/
+
 Task.refreshStatus = function(index){
-	var tr = $("#tslist").children("div").children("div").eq(0).children("table").children("tbody").children("tr");
-	var span = tr.eq(index).children("td").eq(3).children("span");
+	var tr = $("#tslist").children("div").children("table").children("tbody").children("tr").eq(index);
+	var span = tr.children("td").eq(2).children("span");
 	var id = span.attr("id");
 //	console.log(id);
 	if(id === "empty_tslist"){
 		return;
 	}
+	
 	$.getJSON(URL.getTaskStatus() + "?jsoncallback=?" + "&id=" + id)
 		.done(function(data){
 			var new_text = data.taskstatus;
@@ -259,14 +361,14 @@ Task.refreshStatus = function(index){
 			if(old_text === "RUNNING"){
 				if(new_text != "RUNNING"){
 					var new_html = "<input type = 'button' value = '查看' onclick = 'Task.showDetail(\"" + id + "\",\"open\")'/>";
-					new_html += "&nbsp;<input type = 'button' value = '删除' onclick = 'Task.remove(\"" + id + "\")'/>";
-					var td = tr.eq(index).children("td").eq(4);
+					new_html += "<input type = 'button' value = '删除' onclick = 'Task.remove(\"" + id + "\")'/>";
+					var td = tr.children("td").eq(3);
 					td.html(new_html);
 				}
 			}
 			if(old_text != new_text){
-				if($('#tstable').length){
-					var tr_detail = $("#tstable").children("div").children("div").eq(0).children("table").children("tbody").children("tr").eq(1);
+				if($("#tstable-cntr").length){
+					var tr_detail = $("#tstable-cntr").children("div").children("table").children("tbody").children("tr").eq(0);
 					var span_detail = tr_detail.children("td").eq(3).children("span");
 					var id_detail = span_detail.attr("id");
 //					console.log(id_detail);
@@ -276,9 +378,13 @@ Task.refreshStatus = function(index){
 				}
 			}
 		}).fail(function(){
-			alert("Oops, we got an error...");
+			/*****refresh browser error*****/
+//			alert("Oops, we got an error...");
+			console.log("Oops, we got an error...");
 		});
 };
+
+/*****stop task*****/
 
 Task.stop = function(ts_id){
 //	console.log(ts_id);
@@ -287,17 +393,15 @@ Task.stop = function(ts_id){
 //			console.log(data);
 			alert("成功中止任务!");
 			Task.loadList();
-//			console.log(Common.refresh_id);
-			window.clearInterval(Common.refresh_id);
-			Common.refresh_id = window.setInterval("Task.refreshList()",Common.refreshInterval());
-//			console.log(Common.refresh_id);
-			if($('#tstable').length){
+			if($("#tstable-cntr").length){
 				Task.showDetail(ts_id,"refresh");
 			}
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
 };
+
+/*****remove task*****/
 
 Task.remove = function(ts_id){
 //	console.log(ts_id);
@@ -306,11 +410,7 @@ Task.remove = function(ts_id){
 //			console.log(data);
 			alert("成功删除任务记录!");
 			Task.loadList();
-//			console.log(Common.refresh_id);
-			window.clearInterval(Common.refresh_id);
-			Common.refresh_id = window.setInterval("Task.refreshList()",Common.refreshInterval());
-//			console.log(Common.refresh_id);
-			if($('#tstable').length){
+			if($("#tstable-cntr").length){
 				$("#dtfragment-2").empty();
 			}
 		}).fail(function(){

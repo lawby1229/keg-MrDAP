@@ -9,6 +9,7 @@ Desktop.ini
 *.class
 .classpath
 .project
+*.ha
 /.settings/
 /target
 # Recycle Bin used on file shares
