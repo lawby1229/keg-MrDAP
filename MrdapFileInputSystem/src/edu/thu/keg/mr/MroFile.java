@@ -60,6 +60,27 @@ public class MroFile implements XMLFile {
 
 	}
 
+	void writeAttribute(File file, int type, String frontAttri) {
+		Iterator<String> it = Attribute2Num.keySet().iterator();
+		try {
+			FileWriter fw = new FileWriter(file);
+			if (!frontAttri.equals(""))
+				fw.write(frontAttri + " ");
+			String s = "";
+			while (it.hasNext()) {
+				s = it.next();
+				if (Attribute2Num.get(s) == type)
+					fw.write(s + " ");
+			}
+			fw.flush();
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	void printAttribute() {
 		Iterator<String> it = Attribute2Num.keySet().iterator();
 		try {
@@ -106,7 +127,7 @@ public class MroFile implements XMLFile {
 
 		List<Element> smr = root.selectNodes("//smr");
 		String[] attbutes = smr.get(0).getText().trim().split(" +");
-//		System.out.println("一共有属性" + attbutes.length + "个");
+		// System.out.println("一共有属性" + attbutes.length + "个");
 		for (int i = 0; i < attbutes.length; i++) {
 			if (Attribute2Num.get(attbutes[i]) == null)
 				System.out.println(attbutes[i]);
@@ -118,26 +139,33 @@ public class MroFile implements XMLFile {
 	public void writeToFile(Element root) {
 		String fileName = "";
 		Node fileHeader = root.selectSingleNode("//fileHeader");
-		String time = fileHeader.valueOf("@reportTime");
+		String startTime = fileHeader.valueOf("@startTime");
+		String endTime = fileHeader.valueOf("@endTime");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		try {
-			Date reportTime = sdf.parse(time);
+			Date reportTime = sdf.parse(startTime);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(reportTime);
 			int year = cal.get(Calendar.YEAR);
 			int month = cal.get(Calendar.MONTH) + 1;
 			int day = cal.get(Calendar.DAY_OF_MONTH);
-			fileName = year + "" + String.format("%02d", month) + day+".ha";
+			fileName = year + "" + String.format("%02d", month) + day + ".ha";
+			String frontAtrri = "eNBId startTime endTime cellId MmeUeS1apId MmeGroupId MmeCode TimeStamp ";
 			File f1 = new File(outputFolder + "/" + "mro1");
-			if (!f1.isDirectory())
+			if (!f1.isDirectory()) {
 				f1.mkdirs();
+				writeAttribute(new File(f1, "mro1.desc"), 1, frontAtrri);
+			}
 			File f2 = new File(outputFolder + "/" + "mro2");
-			if (!f2.isDirectory())
+			if (!f2.isDirectory()) {
 				f2.mkdirs();
+				writeAttribute(new File(f2, "mro2.desc"), 2, frontAtrri);
+			}
 			File f3 = new File(outputFolder + "/" + "mro3");
-			if (!f3.isDirectory())
+			if (!f3.isDirectory()) {
 				f3.mkdirs();
-
+				writeAttribute(new File(f3, "mro3.desc"), 3, frontAtrri);
+			}
 			fw1 = new FileWriter(new File(f1, fileName), true);
 			fw2 = new FileWriter(new File(f2, fileName), true);
 			fw3 = new FileWriter(new File(f3, fileName), true);
@@ -149,11 +177,13 @@ public class MroFile implements XMLFile {
 
 		Node eNB = root.selectSingleNode("//eNB");
 		String towerId = eNB.valueOf("@id");
-//		System.out.println("基站号:" + towerId);
+		// System.out.println("基站号:" + towerId);
 		List<Element> objs = root.selectNodes("//object");
 		try {
 			for (Element obj : objs) {
 				String lineMain = towerId;
+				lineMain += " " + startTime;
+				lineMain += " " + endTime;
 				String line1 = "";
 				String line2 = "";
 				String line3 = "";
@@ -162,13 +192,22 @@ public class MroFile implements XMLFile {
 				lineMain += " " + obj.valueOf("@MmeGroupId").trim();
 				lineMain += " " + obj.valueOf("@MmeCode").trim();
 				lineMain += " " + obj.valueOf("@TimeStamp").trim();
+				line1 = "";
+				line2 = "";
+				line3 = "";
+				line1 += lineMain.trim();
+				line2 += lineMain.trim();
+				line3 += lineMain.trim();
 				for (Iterator<Element> v = obj.elementIterator(); v.hasNext();) {
-					line1 = "";
-					line2 = "";
-					line3 = "";
 					String[] valueLine = v.next().getText().trim().split(" +");
 					Iterator<String> itAttr = Attribute2Num.keySet().iterator();
 					String s = "";
+					if (!line1.equals("")) {
+						line1 += "#";
+						line2 += "#";
+						line3 += "#";
+					}
+
 					while (itAttr.hasNext()) {
 						s = itAttr.next();
 						if (Attribute2Num.get(s) == 1) {
@@ -182,11 +221,10 @@ public class MroFile implements XMLFile {
 									+ " " + s);
 					}
 
-					fw1.write(lineMain.trim() + " " + line1.trim() + "\n");
-					fw2.write(lineMain.trim() + " " + line2.trim() + "\n");
-					fw3.write(lineMain.trim() + " " + line3.trim() + "\n");
-
 				}
+				fw1.write(line1.trim() + "\n");
+				fw2.write(line2.trim() + "\n");
+				fw3.write(line3.trim() + "\n");
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

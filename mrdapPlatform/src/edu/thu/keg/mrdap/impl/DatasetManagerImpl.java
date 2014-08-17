@@ -3,6 +3,7 @@ package edu.thu.keg.mrdap.impl;
 import hdfs.MFile;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -142,6 +143,8 @@ public class DatasetManagerImpl implements DatasetManager {
 				return;
 			}
 			for (MFile submf : mf.list()) {
+				if (!submf.isDirectory() && !submf.getName().endsWith(".ha"))
+					continue;
 				getAllMfiles(submf, mfs);
 			}
 		} catch (IOException e) {

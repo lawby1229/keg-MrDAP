@@ -42,10 +42,11 @@ public class MrsFile implements XMLFile {
 	void loadMrs() {
 		String fileName = "";
 		Node fileHeader = root.selectSingleNode("//fileHeader");
-		String time = fileHeader.valueOf("@reportTime");
+		String startTime = fileHeader.valueOf("@startTime");
+		String endTime = fileHeader.valueOf("@startTime");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		try {
-			Date reportTime = sdf.parse(time);
+			Date reportTime = sdf.parse(startTime);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(reportTime);
 			int year = cal.get(Calendar.YEAR);
@@ -62,6 +63,15 @@ public class MrsFile implements XMLFile {
 				File f = new File(outputFolder + "/" + measureName + "/");
 				if (!f.isDirectory())
 					f.mkdirs();
+				File desc = new File(f, measureName + ".desc");
+				if (!desc.exists()) {
+					FileWriter fw = new FileWriter(desc, true);
+					Node smr = measure.selectSingleNode("smr");
+					String attri = "towerId" + " " + "startTime" + " " + "id";
+					fw.write(attri + " " + smr.getText().trim());
+					fw.close();
+				}
+
 				FileWriter fw = new FileWriter(new File(f, fileName), true);
 				List<Node> objs = measure.selectNodes("object");
 				for (int j = 0; j < objs.size(); j++) {
@@ -69,8 +79,8 @@ public class MrsFile implements XMLFile {
 					String id = obj.valueOf("@id");
 					List<Node> vs = obj.selectNodes("v");
 					for (Node v : vs) {
-						fw.write(lineMain + " " + id + " " + v.getText().trim()
-								+ "\n");
+						fw.write(lineMain + " " + startTime + " " + endTime
+								+ " " + id + " " + v.getText().trim() + "\n");
 					}
 				}
 				fw.close();

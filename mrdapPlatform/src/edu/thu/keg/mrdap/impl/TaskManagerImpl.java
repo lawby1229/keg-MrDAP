@@ -147,8 +147,8 @@ public class TaskManagerImpl implements TaskManager {
 		}
 		Date now = new Date();
 		Task ts = new TaskImpl(now, name, owner, TaskStatus.READY, type,
-				datasets, Config.getHadoopRoot() + "\\result\\"
-						+ now.toString());
+				datasets, Config.getHadoopRoot() + "mobileRES/" + type.name()
+						+ now.getTime());
 		return ts;
 	}
 
@@ -160,14 +160,34 @@ public class TaskManagerImpl implements TaskManager {
 	@Override
 	public String runTask(Task task) {
 		// try {
-		String pathAll = "";
-		for (String path : task.getDatasets()) {
-			pathAll = pathAll + "," + path;
+		List<String> paths = task.getDatasets();
+		String pathAll = paths.get(0);
+		for (int i = 1; i < paths.size(); i++) {
+			pathAll = pathAll + "," + paths.get(i);
 		}
+		System.out.println(pathAll);
 		String appId = "WCLOVELQ" + System.currentTimeMillis();
+		String pack = "";
+		String jar = "";
+
+		switch (task.getType().name()) {
+		case "Task1":
+			pack = "mobile.Task1";
+			jar = "Task1.jar";
+			break;
+		case "Task2":
+			pack = "";
+			jar = "";
+			break;
+		case "Task3":
+			pack = "";
+			jar = "";
+			break;
+		}
 		try {
-			appId = TaskClient.submit("pagerank.PageRank", 6, 4, 8, 8,
-					"/home/hadoop/slib/spark-kmeans-10.jar", "", "", "");
+			appId = TaskClient.submit(pack, 5, 4, 2, 2, "/home/hadoop/slib/"
+					+ jar, pathAll, task.getOutputPath(), "");
+			System.out.println("输出路径：" + task.getOutputPath());
 			// TaskExecutor.submit("pagerank.PageRank", 6, 4, 8, 8,
 			// "./spark-kmeans-10.jar", pathAll, task.getOutputPath());
 		} catch (IOException e1) {

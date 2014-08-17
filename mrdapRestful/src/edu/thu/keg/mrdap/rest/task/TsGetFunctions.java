@@ -1,5 +1,10 @@
 package edu.thu.keg.mrdap.rest.task;
 
+import hdfs.MFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -22,7 +29,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -64,6 +73,49 @@ public class TsGetFunctions {
 
 	// rest/dsg/sql?db=?&user=?&password=?&sql=?
 
+	@GET
+	@Path("/dl")
+	// @Produces({ MediaType.TEXT_PLAIN })
+	public Response downloadFile(@QueryParam("id") String id) {
+		Platform p = (Platform) servletcontext.getAttribute("platform");
+		TaskManager taskManager = p.getTaskManager();
+
+		try {
+			Task task = taskManager.getTask(id);
+			if (task == null)
+				return Response.status(Status.NOT_FOUND).build();
+			MFile mf = new MFile(task.getOutputPath() + "/part-00000");
+			System.out.println("文件下载中：" + task.getOutputPath());
+			System.out.println("mf：" + mf.toString());
+			if (!mf.exists()) {
+				// httpServletResponse.setStatus(Status.NOT_FOUND.getStatusCode());
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			httpServletResponse.setHeader("content-type", MediaType.TEXT_PLAIN);
+			httpServletResponse.addHeader("content-disposition",
+					"attachment;filename=" + task.getId() + ".csv");
+			InputStream is;
+			is = mf.open();
+
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			OutputStream os = httpServletResponse.getOutputStream();
+			while ((read = is.read(bytes)) != -1) {
+				os.write(bytes, 0, read);
+			}
+			os.flush();
+			os.close();
+			is.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.status(Status.OK).build();
+		// return Response.status(Status.OK).build();
+		// return Response.created(uriInfo.getAbsolutePath()).build();
+	}
+
 	/**
 	 * get all tasks names list
 	 * 
@@ -82,7 +134,7 @@ public class TsGetFunctions {
 		Collection<Task> tasks = taskManager.getTaskList();
 		List<JTask> jtasks = new ArrayList<JTask>();
 		for (Task task : tasks) {
-
+			taskManager.getTaskInfo(task.getId());
 			JTask jtask = new JTask(task);
 			jtasks.add(jtask);
 		}
@@ -108,7 +160,7 @@ public class TsGetFunctions {
 		Platform p = (Platform) servletcontext.getAttribute("platform");
 		TaskManager taskManager = p.getTaskManager();
 		Task task = taskManager.getTask(id);
-
+		taskManager.getTaskInfo(task.getId());
 		JTask jtask = new JTask(task);
 
 		return new JSONWithPadding(new GenericEntity<JTask>(jtask) {

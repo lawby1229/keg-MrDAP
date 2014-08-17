@@ -22,6 +22,7 @@ public class JTask {
 	private List<String> jdatasets = new ArrayList<String>();;
 	private TaskStatus taskstatus;
 	private TaskType tasktype;
+	private String outputPath;
 
 	public JTask() {
 
@@ -35,6 +36,7 @@ public class JTask {
 			jdatasets.add(dataset);
 		this.taskstatus = task.getStute();
 		this.tasktype = task.getType();
+		this.outputPath = task.getOutputPath();
 	}
 
 	/**
@@ -134,6 +136,20 @@ public class JTask {
 	 */
 	public void setTasktype(TaskType tasktype) {
 		this.tasktype = tasktype;
+	}
+
+	/**
+	 * @return the outputPath
+	 */
+	public String getOutputPath() {
+		return outputPath;
+	}
+
+	/**
+	 * @param outputPath the outputPath to set
+	 */
+	public void setOutputPath(String outputPath) {
+		this.outputPath = outputPath;
 	}
 
 }
