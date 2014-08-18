@@ -2,6 +2,8 @@ URL = {};
 
 URL.head = "";
 
+/*****dataset url*****/
+
 URL.getDatasetList = function(){
 	return URL.head + "/rest/dsg/getalldss";
 };
@@ -9,6 +11,8 @@ URL.getDatasetList = function(){
 URL.getDatasetInfo = function(){
 	return URL.head + "/rest/dsg/getds";
 };
+
+/*****task url*****/
 
 URL.getTaskList = function(){
 	return URL.head + "/rest/tsg/gettss";
@@ -36,4 +40,10 @@ URL.stopTask = function(){
 
 URL.removeTask = function(){
 	return URL.head + "/rest/tsg/rmts";
+};
+
+/*****download url*****/
+
+URL.download = function(){
+	return URL.head + "/rest/tsg/dl";
 };

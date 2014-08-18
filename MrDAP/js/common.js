@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	console.log("version 1.1");
+	console.log("version 1.2");
 	Common.setStyle();
 	URL.head = Common.getURL();
 //	console.log("async: false");
@@ -10,12 +10,12 @@ $(document).ready(function(){
 
 Common = {};
 
-/*****refresh*****/
+/*****refresh parameter*****/
 
 Common.refresh_id = -1;
 
 Common.refreshInterval = function(){
-	return 5000;
+	return 1000;
 };
 
 /*****distinguish array & object*****/
@@ -28,7 +28,7 @@ Common.isObject = function(what){
 	return Object.prototype.toString.call(what) === '[object Object]';
 };
 
-/*****open & close window*****/
+/*****open & close checkbox window*****/
 
 Common.openWindow = function(){
 	$("#window").css("display","block");
@@ -38,11 +38,18 @@ Common.closeWindow = function(){
 	$("#window").css("display","none");
 };
 
-/*****document loading*****/
+/*****set base width & height*****/
 
 Common.setStyle = function(){
+	var width = $(document).width();
+	if(width < 1200){
+		width = 1200;
+		$("body").css({
+			"width": width
+		});
+	}
 	var height = $(document).height() - 165;
-	var width = $(document).width() - 900;
+	width -= 900;
 	if(height < 400){
 		height = 400;
 	}
@@ -80,6 +87,8 @@ Common.setStyle = function(){
 	});
 };
 
+/*****get base url*****/
+
 Common.getURL = function(){
 	var url = "";
 	$.ajax({url: "settings.json",async: false,dataType: "json"})
@@ -91,6 +100,8 @@ Common.getURL = function(){
 		});
 	return url;
 };
+
+/*****document loading*****/
 
 Common.loadDataset = function(){
 	Dataset.loadList("dstree","list");
