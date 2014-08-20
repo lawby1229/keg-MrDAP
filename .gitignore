@@ -8,6 +8,7 @@ mrdapPlatform/.classpath
 Desktop.ini
 *.class
 .classpath
+*.classpath
 .project
 *.ha
 *.desc
