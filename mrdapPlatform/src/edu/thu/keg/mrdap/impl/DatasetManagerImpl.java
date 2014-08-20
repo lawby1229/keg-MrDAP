@@ -117,8 +117,8 @@ public class DatasetManagerImpl implements DatasetManager {
 		TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
 		SimpleDateFormat smf = new SimpleDateFormat("yyyyMMdd");
 		for (MFile mf : mfs) {
-			MFile serial = new MFile(mf.getParent());
-			MFile type = new MFile(serial.getParent());
+			MFile type = new MFile(mf.getParent());
+			MFile serial = new MFile(type.getParent());
 			try {
 				createDataset(mf.getPath(), serial.getName(), new Date(smf
 						.parse(mf.getName()).getTime()), type.getName(),
@@ -169,9 +169,11 @@ public class DatasetManagerImpl implements DatasetManager {
 			for (MFile mf : mfs) {
 				if (mf.isDirectory())
 					re.addAll(getAllFilesPath(mf.getPath()));
-				else
+				else {
+					if (!mf.getName().endsWith(".ha"))
+						continue;
 					re.add(mf.getPath());
-
+				}
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -176,17 +176,20 @@ public class TaskManagerImpl implements TaskManager {
 			jar = "Task1.jar";
 			break;
 		case "Task2":
-			pack = "";
-			jar = "";
+			pack = "mobile.Task2";
+			jar = "Task2.jar";
 			break;
 		case "Task3":
-			pack = "";
-			jar = "";
+			pack = "mobile.Task3";
+			jar = "Task3.jar";
 			break;
 		}
 		try {
-			appId = TaskClient.submit(pack, 5, 4, 2, 2, "/home/hadoop/slib/"
-					+ jar, pathAll, task.getOutputPath(), "");
+			appId = TaskClient.submit(pack, 5, 4, 2, 2, jar, pathAll,
+					task.getOutputPath(), "");
+			System.out.println("任务Id：" +appId);
+			if (appId.startsWith("err"))
+				return TaskStatus.FAILED.name();
 			System.out.println("输出路径：" + task.getOutputPath());
 			// TaskExecutor.submit("pagerank.PageRank", 6, 4, 8, 8,
 			// "./spark-kmeans-10.jar", pathAll, task.getOutputPath());
@@ -211,7 +214,7 @@ public class TaskManagerImpl implements TaskManager {
 		// e.printStackTrace();
 		// }
 
-		return null;
+		return TaskStatus.RUNNING.name();
 	}
 
 	/*
@@ -258,8 +261,10 @@ public class TaskManagerImpl implements TaskManager {
 		Task task = tasks.get(id);
 
 		try {
-			System.out.println("获取任务状态id： " + id);
 			TaskInfo ti = TaskQuery.getTaskInfo(id);
+			System.out.println("获取任务状态id： " + id);
+			System.out.println("获取任务状态state： " + ti.getState());
+			System.out.println("获取任务状态finalstatus： " + ti.getFinalStatus());
 			if (ti.getState().equals(State.RUNNING.name()))
 				task.run(id);
 			else if (ti.getState().equals(State.KILLED.name()))
@@ -269,6 +274,10 @@ public class TaskManagerImpl implements TaskManager {
 					task.success();
 				} else if (ti.getFinalStatus()
 						.equals(FinalStatus.FAILED.name())) {
+					task.fail();
+				}
+			} else if (ti.getState().equals(State.FAILED.name())) {
+				if (ti.getFinalStatus().equals(FinalStatus.FAILED.name())) {
 					task.fail();
 				}
 			}

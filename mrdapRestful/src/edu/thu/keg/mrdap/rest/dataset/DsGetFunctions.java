@@ -117,29 +117,31 @@ public class DsGetFunctions {
 		JSONObject JsonBack = new JSONObject();
 		try {
 			for (Dataset dataset : datasets) {
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(dataset.getDate());
-				String year = String.valueOf(calendar.get(Calendar.YEAR));
-				String month = String.valueOf(calendar.get(Calendar.MONTH) + 1);
-				String day = String
-						.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-				if (!JsonBack.has(dataset.getType()))
-					JsonBack.put(dataset.getType(), new JSONObject());
+				// Calendar calendar = Calendar.getInstance();
+				// calendar.setTime(dataset.getDate());
+				// String year = String.valueOf(calendar.get(Calendar.YEAR));
+				// String month = String.valueOf(calendar.get(Calendar.MONTH) +
+				// 1);
+				// String day = String
+				// .valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+				if (!JsonBack.has(dataset.getSerial()))
+					JsonBack.put(dataset.getSerial(), new JSONObject());
 				JSONObject jserial = (JSONObject) JsonBack.get(dataset
+						.getSerial());
+				if (!jserial.has(dataset.getType()))
+					jserial.put(dataset.getType(), new JSONArray());
+				// JSONObject jyear = (JSONObject) jserial
+				// .get(dataset.getSerial());
+				// if (!jyear.has(year))
+				// jyear.put(year, new JSONObject());
+				// JSONObject jmonth = (JSONObject) jyear.get(year);
+				// if (!jmonth.has(month))
+				// jmonth.put(month, new JSONObject());
+				// JSONObject jday = (JSONObject) jmonth.get(month);
+				// if (!jday.has(day))
+				// jday.put(day, new JSONArray());
+				JSONArray jdatasetArray = (JSONArray) jserial.get(dataset
 						.getType());
-				if (!jserial.has(dataset.getSerial()))
-					jserial.put(dataset.getSerial(), new JSONObject());
-				JSONObject jyear = (JSONObject) jserial
-						.get(dataset.getSerial());
-				if (!jyear.has(year))
-					jyear.put(year, new JSONObject());
-				JSONObject jmonth = (JSONObject) jyear.get(year);
-				if (!jmonth.has(month))
-					jmonth.put(month, new JSONObject());
-				JSONObject jday = (JSONObject) jmonth.get(month);
-				if (!jday.has(day))
-					jday.put(day, new JSONArray());
-				JSONArray jdatasetArray = (JSONArray) jday.get(day);
 				JSONObject jobj = new JSONObject();
 				jobj.put("id", dataset.getId());
 				jobj.put("name", dataset.getName());

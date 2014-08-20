@@ -188,6 +188,7 @@ public class TsGetFunctions {
 		TaskManager taskManager = p.getTaskManager();
 		List<String> allPaths = new ArrayList<String>();
 		JSONArray jdatasets;
+		JSONObject job = new JSONObject();
 		try {
 			jdatasets = new JSONArray(datasets);
 
@@ -196,17 +197,17 @@ public class TsGetFunctions {
 				allPaths.add(Config.getHadoopRoot() + jdatasets.getString(i));
 
 			}
+			Task task = taskManager.setTask(TaskType.valueOf(type), name,
+					"admin", allPaths);
+			String status = taskManager.runTask(task);
+
+			job.put("status", status);
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
-		Task task = taskManager.setTask(TaskType.valueOf(type), name, "admin",
-				allPaths);
-		String id = taskManager.runTask(task);
-
-		JTask jtask = new JTask(task);
-		return new JSONWithPadding(new GenericEntity<JTask>(jtask) {
+		return new JSONWithPadding(new GenericEntity<String>(job.toString()) {
 		}, jsoncallback);
 	}
 
