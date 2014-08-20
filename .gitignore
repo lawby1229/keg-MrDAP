@@ -7,7 +7,7 @@ mrdapPlatform/.classpath
 # Folder config file
 Desktop.ini
 *.class
-.classpath
+mrdapRestful/.classpath
 *.classpath
 .project
 *.ha
