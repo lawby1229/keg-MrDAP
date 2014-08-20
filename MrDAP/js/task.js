@@ -395,8 +395,7 @@ Task.run = function(){
 //		console.log(this.id);
 		datasets[index] = $("#" + this.id).children("a").children("span").attr("id");
 	});
-	console.log(datasets);
-	return;
+//	console.log(datasets);
 	
 	/*****get parameter text*****/
 	var tr = $("#dtfragment-2").children("table").children("tbody").children("tr").eq(2);
