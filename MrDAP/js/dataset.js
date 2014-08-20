@@ -52,7 +52,7 @@ Dataset.loadLevel = function(data,ul_id,type){
 				if(type === "list"){
 					a = $("<a href = 'javascript:void(0)' onclick = 'Dataset.showTable(\"" + value[j].id + "\")'>" + value[j].name + "</a>");
 				}else{
-					a = $("<span></span>");
+					a = $("<span id = '" + value[j].id + "'></span>");
 					a.html(value[j].name);
 				}
 				a.appendTo(li);

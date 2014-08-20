@@ -379,22 +379,24 @@ Task.run = function(){
 	
 	/*****get selected datasets*****/
 	var datasets = $.parseJSON("[]");
-	$.each($("#dstree-float").jstree("get_top_checked",true),function(index,value){
-//		console.log(this.id);
-		var path = Task.getPath(this.id);
-		datasets[index] = "";
-		for(var i = path.length - 1; i >= 0; i--){
-			datasets[index] += path[i];
-			if(i != 0){
-				datasets[index] += "/";
-			}
-		}
-	});
-//	console.log(datasets);
-	if(datasets.length === 0){
+	var top_checked = $("#dstree-float").jstree("get_top_checked",true);
+	if(top_checked.length === 0){
 		alert("选择一个数据集!");
 		return;
 	}
+	
+	/*****close checkbox window*****/
+	Common.closeWindow();
+	$.each(top_checked,function(index,value){
+//		console.log(this.id);
+		$("#dstree-float").jstree("open_all",this.id);
+	});
+	$.each($("#dstree-float").jstree("get_bottom_checked",true),function(index,value){
+//		console.log(this.id);
+		datasets[index] = $("#" + this.id).children("a").children("span").attr("id");
+	});
+	console.log(datasets);
+	return;
 	
 	/*****get parameter text*****/
 	var tr = $("#dtfragment-2").children("table").children("tbody").children("tr").eq(2);
@@ -415,24 +417,11 @@ Task.run = function(){
 				alert("新建任务失败!");
 			}
 			
-			/*****close & reload checkbox window*****/
-			Common.closeWindow();
+			/*****reload checkbox window*****/
 			Task.loadDslist();
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
-};
-
-/*****get dataset file path*****/
-
-Task.getPath = function(node_id){
-	var node_text = [];
-	node_text[0] = $("#" + node_id).children("a").text();
-	var parent = $("#" + node_id).parents("li");
-	for(var i = 0; i < parent.length; i++){
-		node_text[i + 1] = parent.eq(i).children("a").text();
-	}
-	return node_text;
 };
 
 /*****refresh task list*****/
