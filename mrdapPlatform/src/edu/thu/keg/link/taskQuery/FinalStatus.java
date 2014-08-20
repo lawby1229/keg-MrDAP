@@ -1,4 +1,4 @@
-package taskQuery;
+package edu.thu.keg.link.taskQuery;
 
 public enum FinalStatus
 {

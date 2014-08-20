@@ -1,7 +1,5 @@
 package edu.thu.keg.mrdap.impl;
 
-import hdfs.MFile;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,16 +14,16 @@ import java.util.List;
 
 import org.codehaus.jettison.json.JSONException;
 
-import taskClient.TaskClient;
-import taskQuery.FinalStatus;
-import taskQuery.State;
-import taskQuery.TaskQuery;
-import taskQuery.TaskQuery.TaskInfo;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
+import edu.thu.keg.link.hdfs.MFile;
+import edu.thu.keg.link.taskClient.TaskClient;
+import edu.thu.keg.link.taskQuery.FinalStatus;
+import edu.thu.keg.link.taskQuery.State;
+import edu.thu.keg.link.taskQuery.TaskQuery;
+import edu.thu.keg.link.taskQuery.TaskQuery.TaskInfo;
 import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.TaskManager;
 import edu.thu.keg.mrdap.dataset.Dataset;
@@ -34,7 +32,6 @@ import edu.thu.keg.mrdap.impl.DatasetManagerImpl.Storage;
 import edu.thu.keg.mrdap.task.Task;
 import edu.thu.keg.mrdap.task.impl.TaskImpl;
 import edu.thu.keg.mrdap.task.impl.TaskStatus;
-import edu.thu.keg.mrdap.task.impl.TaskType;
 
 public class TaskManagerImpl implements TaskManager {
 
@@ -124,7 +121,7 @@ public class TaskManagerImpl implements TaskManager {
 	 * java.lang.String, java.lang.String, java.util.List)
 	 */
 	@Override
-	public Task setTask(TaskType type, String name, String owner,
+	public Task setTask(String type, String name, String owner,
 			List<String> filePaths) {
 		// if (tasks.containsKey(id)) {
 		// System.out.println(id + " task is already egxisted!");
@@ -147,7 +144,7 @@ public class TaskManagerImpl implements TaskManager {
 		}
 		Date now = new Date();
 		Task ts = new TaskImpl(now, name, owner, TaskStatus.READY, type,
-				datasets, Config.getHadoopRoot() + "mobileRES/" + type.name()
+				datasets, Config.getHadoopRoot() + "mobileRES/" + type
 						+ now.getTime());
 		return ts;
 	}
@@ -167,32 +164,32 @@ public class TaskManagerImpl implements TaskManager {
 		}
 		System.out.println(pathAll);
 		String appId = "WCLOVELQ" + System.currentTimeMillis();
-		String pack = "";
-		String jar = "";
-
-		switch (task.getType().name()) {
-		case "Task1":
-			pack = "mobile.Task1";
-			jar = "Task1.jar";
-			break;
-		case "Task2":
-			pack = "mobile.Task2";
-			jar = "Task2.jar";
-			break;
-		case "Task3":
-			pack = "mobile.Task3";
-			jar = "Task3.jar";
-			break;
-		}
+		// String pack = "";
+		// String jar = "";
+		//
+		// switch (task.getType().name()) {
+		// case "Task1":
+		// pack = "mobile.Task1";
+		// jar = "Task1.jar";
+		// break;
+		// case "Task2":
+		// pack = "mobile.Task2";
+		// jar = "Task2.jar";
+		// break;
+		// case "Task3":
+		// pack = "mobile.Task3";
+		// jar = "Task3.jar";
+		// break;
+		// }
 		try {
-			appId = TaskClient.submit(pack, 5, 4, 2, 2, jar, pathAll,
+			// appId = TaskClient.submit(pack, 5, 4, 2, 2, jar, pathAll,
+			// task.getOutputPath(), "");
+			appId = TaskClient.submit(task.getType(), pathAll,
 					task.getOutputPath(), "");
-			System.out.println("任务Id：" +appId);
+			System.out.println("任务Id：" + appId);
 			if (appId.startsWith("err"))
 				return TaskStatus.FAILED.name();
 			System.out.println("输出路径：" + task.getOutputPath());
-			// TaskExecutor.submit("pagerank.PageRank", 6, 4, 8, 8,
-			// "./spark-kmeans-10.jar", pathAll, task.getOutputPath());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

@@ -8,7 +8,6 @@ import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.Platform;
 import edu.thu.keg.mrdap.TaskManager;
 import edu.thu.keg.mrdap.dataset.Dataset;
-import edu.thu.keg.mrdap.task.impl.TaskType;
 
 public class PlatformImpl implements Platform {
 	public PlatformImpl(String file) {

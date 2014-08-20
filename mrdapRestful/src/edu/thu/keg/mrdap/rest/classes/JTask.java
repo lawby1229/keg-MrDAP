@@ -6,12 +6,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.eclipse.jdt.internal.compiler.ast.ArrayAllocationExpression;
-
-import edu.thu.keg.mrdap.dataset.Dataset;
 import edu.thu.keg.mrdap.task.Task;
 import edu.thu.keg.mrdap.task.impl.TaskStatus;
-import edu.thu.keg.mrdap.task.impl.TaskType;
 
 @XmlRootElement
 public class JTask {
@@ -21,7 +17,7 @@ public class JTask {
 	private String name;
 	private List<String> jdatasets = new ArrayList<String>();;
 	private TaskStatus taskstatus;
-	private TaskType tasktype;
+	private String tasktype;
 	private String outputPath;
 
 	public JTask() {
@@ -126,7 +122,7 @@ public class JTask {
 	/**
 	 * @return the tasktype
 	 */
-	public TaskType getTasktype() {
+	public String getTasktype() {
 		return tasktype;
 	}
 
@@ -134,7 +130,7 @@ public class JTask {
 	 * @param tasktype
 	 *            the tasktype to set
 	 */
-	public void setTasktype(TaskType tasktype) {
+	public void setTasktype(String tasktype) {
 		this.tasktype = tasktype;
 	}
 
@@ -146,7 +142,8 @@ public class JTask {
 	}
 
 	/**
-	 * @param outputPath the outputPath to set
+	 * @param outputPath
+	 *            the outputPath to set
 	 */
 	public void setOutputPath(String outputPath) {
 		this.outputPath = outputPath;

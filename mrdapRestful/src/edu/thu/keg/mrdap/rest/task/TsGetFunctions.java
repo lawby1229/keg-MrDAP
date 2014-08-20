@@ -1,7 +1,5 @@
 package edu.thu.keg.mrdap.rest.task;
 
-import hdfs.MFile;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,10 +39,14 @@ import org.mortbay.util.ajax.JSON;
 
 import com.sun.jersey.api.json.JSONWithPadding;
 
+import edu.thu.keg.link.hdfs.MFile;
+import edu.thu.keg.link.taskTypeQuery.TaskTypeField;
+import edu.thu.keg.link.taskTypeQuery.TaskTypeQuery;
+import edu.thu.keg.link.taskTypeQuery.TaskTypeQuery.TaskType;
 import edu.thu.keg.mrdap.rest.classes.JTask;
+import edu.thu.keg.mrdap.rest.classes.JTaskType;
 import edu.thu.keg.mrdap.task.Task;
 import edu.thu.keg.mrdap.task.impl.TaskStatus;
-import edu.thu.keg.mrdap.task.impl.TaskType;
 import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.Platform;
 import edu.thu.keg.mrdap.TaskManager;
@@ -194,11 +196,9 @@ public class TsGetFunctions {
 
 			for (int i = 0; i < jdatasets.length(); i++) {
 
-				allPaths.add(Config.getHadoopRoot() + jdatasets.getString(i));
-
+				allPaths.add(jdatasets.getString(i));
 			}
-			Task task = taskManager.setTask(TaskType.valueOf(type), name,
-					"admin", allPaths);
+			Task task = taskManager.setTask(type, name, "admin", allPaths);
 			String status = taskManager.runTask(task);
 
 			job.put("status", status);
@@ -219,13 +219,16 @@ public class TsGetFunctions {
 		log.info(uriInfo.getAbsolutePath());
 		session = httpServletRequest.getSession();
 		System.out.println(session.getId());
-		List<String> types = new ArrayList<String>();
-		for (TaskType ts : TaskType.values()) {
-			types.add(ts.name());
+		List<JTaskType> jtypes = new ArrayList<JTaskType>();
+		try {
+			for (TaskType ts : TaskTypeQuery.getTaskTypeList()) {
+				jtypes.add(new JTaskType(ts));
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		System.out.println(types);
-		JSONArray ja = new JSONArray(types);
-		return new JSONWithPadding(new GenericEntity<String>(ja.toString()) {
+		return new JSONWithPadding(new GenericEntity<List<JTaskType>>(jtypes) {
 		}, jsoncallback);
 	}
 

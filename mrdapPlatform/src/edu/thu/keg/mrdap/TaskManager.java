@@ -1,7 +1,5 @@
 package edu.thu.keg.mrdap;
 
-import hdfs.MFile;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
@@ -9,7 +7,6 @@ import java.util.List;
 
 import edu.thu.keg.mrdap.task.Task;
 import edu.thu.keg.mrdap.task.impl.TaskStatus;
-import edu.thu.keg.mrdap.task.impl.TaskType;
 
 public interface TaskManager {
 
@@ -19,7 +16,7 @@ public interface TaskManager {
 
 	public void saveXMLChanges() throws IOException;
 
-	public Task setTask(TaskType type, String name, String owner,
+	public Task setTask(String type, String name, String owner,
 			List<String> filePaths);
 
 	//

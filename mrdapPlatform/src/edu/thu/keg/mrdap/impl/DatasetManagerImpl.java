@@ -1,6 +1,5 @@
 package edu.thu.keg.mrdap.impl;
 
-import hdfs.MFile;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -28,6 +27,8 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 import com.thoughtworks.xstream.converters.basic.DateConverter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+
+import edu.thu.keg.link.hdfs.MFile;
 import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.dataset.Dataset;
 import edu.thu.keg.mrdap.dataset.impl.DatasetImpl;

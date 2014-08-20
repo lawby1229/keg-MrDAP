@@ -1,7 +1,9 @@
-package env;
+package edu.thu.keg.link.env;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Map;
 
 public class Default {
@@ -18,16 +20,15 @@ public class Default {
 	private static final Default def = new Default();
 
 	public static String getValue(String key) {
-		// if(conf==null)
-		// {
+		// if (conf == null) {
 		// initDefault();
 		// }
 		return conf.get(key);
 	}
 
-	public static void initDefault(String defFile) {
+	public static void initDefault(String fileName) {
 
-		conf = ReadXML.getConf(defFile);
+		conf = ReadXML.getConf(fileName);
 
 		if (conf.get("HADOOP_HOME") == null) {
 			// load System env_setting by default

@@ -1,7 +1,5 @@
 package edu.thu.keg.mrdap.task.impl;
 
-import hdfs.MFile;
-
 import java.util.Date;
 import java.util.List;
 
@@ -18,10 +16,10 @@ public class TaskImpl implements Task {
 	private List<String> directorys = null;
 	private String outputPath = null;
 	TaskStatus status = null;
-	TaskType type = null;
+	String type = "";
 
 	public TaskImpl(Date date, String name, String owner, TaskStatus status,
-			TaskType type, List<String> datasets, String outputPath) {
+			String type, List<String> datasets, String outputPath) {
 
 		this.date = date;
 		this.name = name;
@@ -91,7 +89,7 @@ public class TaskImpl implements Task {
 	 * @see edu.thu.keg.mrdap.task.Task#getType()
 	 */
 	@Override
-	public TaskType getType() {
+	public String getType() {
 		// TODO Auto-generated method stub
 		return this.type;
 	}

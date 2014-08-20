@@ -5,7 +5,6 @@ import java.util.List;
 
 import edu.thu.keg.mrdap.dataset.Dataset;
 import edu.thu.keg.mrdap.task.impl.TaskStatus;
-import edu.thu.keg.mrdap.task.impl.TaskType;
 
 public interface Task {
 	public String getId();
@@ -16,7 +15,7 @@ public interface Task {
 
 	public TaskStatus getStute();
 
-	public TaskType getType();
+	public String getType();
 
 	public String getOutputPath();
 
