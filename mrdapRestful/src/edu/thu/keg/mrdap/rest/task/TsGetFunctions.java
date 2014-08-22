@@ -35,8 +35,6 @@ import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.mortbay.util.ajax.JSON;
-
 import com.sun.jersey.api.json.JSONWithPadding;
 
 import edu.thu.keg.link.hdfs.MFile;
@@ -47,11 +45,8 @@ import edu.thu.keg.mrdap.rest.classes.JTask;
 import edu.thu.keg.mrdap.rest.classes.JTaskType;
 import edu.thu.keg.mrdap.task.Task;
 import edu.thu.keg.mrdap.task.impl.TaskStatus;
-import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.Platform;
 import edu.thu.keg.mrdap.TaskManager;
-import edu.thu.keg.mrdap.dataset.Dataset;
-import edu.thu.keg.mrdap.impl.Config;
 
 @Path("/tsg")
 public class TsGetFunctions {
@@ -179,7 +174,7 @@ public class TsGetFunctions {
 	@GET
 	@Path("/runtask")
 	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
-	public JSONWithPadding setAndRunTask(@QueryParam("type") String type,
+	public JSONWithPadding setAndRunTask(@QueryParam("typeId") String typeId,
 			@QueryParam("name") String name,
 			@QueryParam("datasets") String datasets,
 			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
@@ -198,7 +193,10 @@ public class TsGetFunctions {
 
 				allPaths.add(jdatasets.getString(i));
 			}
-			Task task = taskManager.setTask(type, name, "admin", allPaths);
+
+			Task task = taskManager.setTask(typeId, TaskTypeQuery
+					.getTaskTypeById(typeId).getValue(TaskTypeField.NAME),
+					name, "admin", allPaths);
 			String status = taskManager.runTask(task);
 
 			job.put("status", status);
@@ -305,6 +303,26 @@ public class TsGetFunctions {
 		}
 		return new JSONWithPadding(new GenericEntity<String>(job.toString()) {
 		}, jsoncallback);
+	}
+
+	@GET
+	@Path("/refresh")
+	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
+	// @Produces({ MediaType })
+	public JSONWithPadding refresh(
+			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
+		String re = TaskTypeQuery.update();
+		JSONObject job = new JSONObject();
+		try {
+			job.put("status", re);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new JSONWithPadding(new GenericEntity<String>(job.toString()) {
+		}, jsoncallback);
+		// return Response.status(Status.OK).build();
+		// return Response.created(uriInfo.getAbsolutePath()).build();
 	}
 
 	@GET

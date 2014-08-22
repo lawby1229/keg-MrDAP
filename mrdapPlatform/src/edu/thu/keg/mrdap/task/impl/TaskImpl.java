@@ -16,16 +16,19 @@ public class TaskImpl implements Task {
 	private List<String> directorys = null;
 	private String outputPath = null;
 	TaskStatus status = null;
-	String type = "";
+	String typeName = "";
+	String typeId = "";
 
 	public TaskImpl(Date date, String name, String owner, TaskStatus status,
-			String type, List<String> datasets, String outputPath) {
+			String typeId, String typeName, List<String> datasets,
+			String outputPath) {
 
 		this.date = date;
 		this.name = name;
 		this.owner = owner;
 		this.status = status;
-		this.type = type;
+		this.typeId = typeId;
+		this.typeName = typeName;
 		this.datasets = datasets;
 		this.outputPath = outputPath;
 	}
@@ -86,12 +89,23 @@ public class TaskImpl implements Task {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see edu.thu.keg.mrdap.task.Task#getType()
+	 * @see edu.thu.keg.mrdap.task.Task#getTypeName()
 	 */
 	@Override
-	public String getType() {
+	public String getTypeName() {
 		// TODO Auto-generated method stub
-		return this.type;
+		return this.typeName;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see edu.thu.keg.mrdap.task.Task#getTypeId()
+	 */
+	@Override
+	public String getTypeId() {
+		// TODO Auto-generated method stub
+		return this.typeId;
 	}
 
 	/*
@@ -155,6 +169,12 @@ public class TaskImpl implements Task {
 	public void success() {
 		this.status = TaskStatus.SUCCEEDED;
 
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

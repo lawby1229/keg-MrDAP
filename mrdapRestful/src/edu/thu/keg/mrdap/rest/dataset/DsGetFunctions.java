@@ -21,7 +21,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONArray;
@@ -30,6 +32,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.sun.jersey.api.json.JSONWithPadding;
 
+import edu.thu.keg.link.taskTypeQuery.TaskTypeQuery;
 import edu.thu.keg.mrdap.rest.classes.JDataset;
 import edu.thu.keg.mrdap.DatasetManager;
 import edu.thu.keg.mrdap.Platform;
@@ -155,6 +158,28 @@ public class DsGetFunctions {
 		return new JSONWithPadding(new GenericEntity<String>(
 				JsonBack.toString()) {
 		}, jsoncallback);
+	}
+
+	@GET
+	@Path("/refresh")
+	@Produces({ "application/javascript", MediaType.APPLICATION_JSON })
+	// @Produces({ MediaType.TEXT_PLAIN })
+	public JSONWithPadding refresh(
+			@QueryParam("jsoncallback") @DefaultValue("fn") String jsoncallback) {
+		Platform p = (Platform) servletcontext.getAttribute("platform");
+		DatasetManager datasetManager = p.getDatasetManager();
+		datasetManager.refreshDatasetInHadoop();
+		JSONObject job = new JSONObject();
+		try {
+			job.put("status", "OK");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new JSONWithPadding(new GenericEntity<String>(job.toString()) {
+		}, jsoncallback);
+		// return Response.status(Status.OK).build();
+		// return Response.created(uriInfo.getAbsolutePath()).build();
 	}
 
 	@GET

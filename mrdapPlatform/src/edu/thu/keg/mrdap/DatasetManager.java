@@ -8,6 +8,8 @@ import java.util.List;
 import edu.thu.keg.mrdap.dataset.Dataset;
 
 public interface DatasetManager {
+	
+	public void refreshDatasetInHadoop();
 
 	public Collection<Dataset> getDatasetList();
 

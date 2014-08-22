@@ -15,7 +15,11 @@ public interface Task {
 
 	public TaskStatus getStute();
 
-	public String getType();
+	public String getTypeName();
+
+	public String getTypeId();
+
+	public String getName();
 
 	public String getOutputPath();
 

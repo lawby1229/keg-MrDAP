@@ -121,8 +121,8 @@ public class TaskManagerImpl implements TaskManager {
 	 * java.lang.String, java.lang.String, java.util.List)
 	 */
 	@Override
-	public Task setTask(String type, String name, String owner,
-			List<String> filePaths) {
+	public Task setTask(String typeId, String typeName, String name,
+			String owner, List<String> filePaths) {
 		// if (tasks.containsKey(id)) {
 		// System.out.println(id + " task is already egxisted!");
 		// return null;
@@ -143,9 +143,9 @@ public class TaskManagerImpl implements TaskManager {
 			e.printStackTrace();
 		}
 		Date now = new Date();
-		Task ts = new TaskImpl(now, name, owner, TaskStatus.READY, type,
-				datasets, Config.getHadoopRoot() + "mobileRES/" + type
-						+ now.getTime());
+		Task ts = new TaskImpl(now, name, owner, TaskStatus.READY, typeId,
+				typeName, datasets, Config.getHadoopRoot() + "mobileRES/"
+						+ typeId + now.getTime());
 		return ts;
 	}
 
@@ -184,7 +184,7 @@ public class TaskManagerImpl implements TaskManager {
 		try {
 			// appId = TaskClient.submit(pack, 5, 4, 2, 2, jar, pathAll,
 			// task.getOutputPath(), "");
-			appId = TaskClient.submit(task.getType(), pathAll,
+			appId = TaskClient.submit(task.getTypeId(), pathAll,
 					task.getOutputPath(), "");
 			System.out.println("任务Id：" + appId);
 			if (appId.startsWith("err"))

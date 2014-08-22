@@ -17,7 +17,9 @@ public class JTask {
 	private String name;
 	private List<String> jdatasets = new ArrayList<String>();;
 	private TaskStatus taskstatus;
-	private String tasktype;
+	private String taskTypeId;
+	private String taskTypeName;
+
 	private String outputPath;
 
 	public JTask() {
@@ -27,11 +29,13 @@ public class JTask {
 	public JTask(Task task) {
 		this.id = task.getId();
 		this.date = task.getDate();
+		this.name = task.getName();
 		// this.setJdatasets(task.getDatasets());
 		for (String dataset : task.getDatasets())
 			jdatasets.add(dataset);
 		this.taskstatus = task.getStute();
-		this.tasktype = task.getType();
+		this.taskTypeId = task.getTypeId();
+		this.taskTypeName = task.getTypeName();
 		this.outputPath = task.getOutputPath();
 	}
 
@@ -122,16 +126,31 @@ public class JTask {
 	/**
 	 * @return the tasktype
 	 */
-	public String getTasktype() {
-		return tasktype;
+	public String getTaskTypeName() {
+		return this.taskTypeName;
 	}
 
 	/**
 	 * @param tasktype
 	 *            the tasktype to set
 	 */
-	public void setTasktype(String tasktype) {
-		this.tasktype = tasktype;
+	public void setTaskTypeName(String taskTypeName) {
+		this.taskTypeName = taskTypeName;
+	}
+
+	/**
+	 * @return the taskTypeId
+	 */
+	public String getTaskTypeId() {
+		return taskTypeId;
+	}
+
+	/**
+	 * @param taskTypeId
+	 *            the taskTypeId to set
+	 */
+	public void setTaskTypeId(String taskTypeId) {
+		this.taskTypeId = taskTypeId;
 	}
 
 	/**

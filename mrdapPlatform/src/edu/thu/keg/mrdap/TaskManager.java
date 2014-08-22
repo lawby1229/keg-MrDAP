@@ -16,8 +16,8 @@ public interface TaskManager {
 
 	public void saveXMLChanges() throws IOException;
 
-	public Task setTask(String type, String name, String owner,
-			List<String> filePaths);
+	public Task setTask(String typeId, String typeName, String name,
+			String owner, List<String> filePaths);
 
 	//
 	// public void createTask(String id, Date date, TaskType type, String name,

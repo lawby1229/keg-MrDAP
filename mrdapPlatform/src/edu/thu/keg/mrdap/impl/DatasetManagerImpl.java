@@ -1,6 +1,5 @@
 package edu.thu.keg.mrdap.impl;
 
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
@@ -58,14 +57,13 @@ public class DatasetManagerImpl implements DatasetManager {
 	private static DatasetManagerImpl instance;
 
 	private DatasetManagerImpl() {
-		datasets = new HashMap<String, Dataset>();
 
 		try {
 			System.out
 					.println("(DatasetManagerImpl) Loading Dataset File Name: "
 							+ Config.getDataSetFile());
 			// loadXMLDatasets(Config.getDataSetFile());
-			loadHadoopDatasets();
+			loadHadoopDatasets(false);
 		} catch (Exception ex) {
 			// log.warn(ex.getMessage());
 
@@ -110,13 +108,15 @@ public class DatasetManagerImpl implements DatasetManager {
 
 	}
 
-	private void loadHadoopDatasets() {
+	private void loadHadoopDatasets(boolean isRemainOld) {
 
 		List<MFile> mfs = new ArrayList<MFile>();
 		MFile mfile = new MFile("/mobile");
 		getAllMfiles(mfile, mfs);
 		TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
 		SimpleDateFormat smf = new SimpleDateFormat("yyyyMMdd");
+		if (!isRemainOld || datasets == null)
+			datasets = new HashMap<String, Dataset>();
 		for (MFile mf : mfs) {
 			MFile type = new MFile(mf.getParent());
 			MFile serial = new MFile(type.getParent());
@@ -240,6 +240,11 @@ public class DatasetManagerImpl implements DatasetManager {
 		Dataset ds = new DatasetImpl(id, serial, date, type, name, owner, path,
 				sizeMb, isDic);
 		addDataset(ds);
+	}
+
+	@Override
+	public void refreshDatasetInHadoop() {
+		loadHadoopDatasets(true);
 	}
 
 }

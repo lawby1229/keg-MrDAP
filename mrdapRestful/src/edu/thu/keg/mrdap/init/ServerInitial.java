@@ -10,8 +10,8 @@ import javax.servlet.annotation.WebListener;
 import org.apache.log4j.Logger;
 
 import edu.thu.keg.link.env.Default;
+import edu.thu.keg.link.taskTypeQuery.TaskTypeQuery;
 import edu.thu.keg.mrdap.impl.PlatformImpl;
-
 
 /**
  * 启动服务器时候的初始化server
@@ -44,6 +44,7 @@ public class ServerInitial implements ServletContextListener {
 				.getString("PlatformImpl_CONFIG");
 		Default.initDefault(arg0.getServletContext().getRealPath(
 				"/WEB-INF/" + "default.xml"));
+		TaskTypeQuery.update();
 		PlatformImpl p = new PlatformImpl(arg0.getServletContext().getRealPath(
 				"/WEB-INF/" + P_Config));
 
