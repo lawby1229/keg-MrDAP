@@ -82,6 +82,7 @@ public class TsGetFunctions {
 			if (task == null)
 				return Response.status(Status.NOT_FOUND).build();
 			MFile mf = new MFile(task.getOutputPath() + "/part-00000");
+
 			System.out.println("文件下载中：" + task.getOutputPath());
 			System.out.println("mf：" + mf.toString());
 			if (!mf.exists()) {
@@ -93,18 +94,20 @@ public class TsGetFunctions {
 					"attachment;filename=" + task.getId() + ".csv");
 			InputStream is;
 			is = mf.open();
-
+			TaskType ty = TaskTypeQuery.getTaskTypeById(task.getTypeId());
+			String outputFileds = ty.getValue(TaskTypeField.OUTPUT_META);
+			String fileds = outputFileds.split(":")[1].trim() + "\n";
 			int read = 0;
 			byte[] bytes = new byte[1024];
-
 			OutputStream os = httpServletResponse.getOutputStream();
+			os.write(fileds.getBytes());
 			while ((read = is.read(bytes)) != -1) {
 				os.write(bytes, 0, read);
 			}
 			os.flush();
 			os.close();
 			is.close();
-		} catch (IOException e) {
+		} catch (IOException | JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
