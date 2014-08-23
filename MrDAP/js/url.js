@@ -12,6 +12,10 @@ URL.getDatasetInfo = function(){
 	return URL.head + "/rest/dsg/getds";
 };
 
+URL.refreshDslist = function(){
+	return URL.head + "/rest/dsg/refresh";
+};
+
 /*****task url*****/
 
 URL.getTaskList = function(){
@@ -24,6 +28,10 @@ URL.getTaskInfo = function(){
 
 URL.getTaskType = function(){
 	return URL.head + "/rest/tsg/tstypes";
+};
+
+URL.refreshTstype = function(){
+	return URL.head + "/rest/tsg/refresh";
 };
 
 URL.getTaskStatus = function(){

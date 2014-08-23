@@ -32,6 +32,7 @@
 }
 
 #dtfragment-1,#dtfragment-2{
+	position: relative;
 	text-align: center;
 	font-size: 16px;
 	font-family: Times New Roman,'楷体';
@@ -39,6 +40,24 @@
 
 #dtfragment-1 span,.dtfragment-2-title{
 	font-weight: bold;
+}
+
+#dtfragment-2 img{
+	position: absolute;
+	top: 12px;
+	right: 120px;
+	width: 15px;
+	cursor: pointer;
+}
+
+.dtfragment-2-a{
+	position: absolute;
+	right: 20px;
+	text-decoration: none;
+}
+
+.dtfragment-2-a:link,.dtfragment-2-a:hover,.dtfragment-2-a:visited{
+	color: blue;
 }
 
 #dstable-cntr,#tstable-cntr,.dtfragment-2-selector{

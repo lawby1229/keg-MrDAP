@@ -286,6 +286,10 @@ Task.create = function(){
 	title.attr("class","dtfragment-2-title");
 	title.appendTo(cntr);
 	title.text("新建任务");
+	var img = $("<img src='css/images/refresh_512x512.png' onclick='Task.refreshType()'/>");
+	img.appendTo(cntr);
+	var a = $("<a class = 'dtfragment-2-a' href = 'javascript:void(0)' onclick = 'Task.refreshType()'>刷新任务类别</a>");
+	a.appendTo(cntr);
 	var selector = $("<table></table>");
 	selector.attr("class","dtfragment-2-selector");
 	selector.appendTo(cntr);
@@ -293,17 +297,57 @@ Task.create = function(){
 		"width": cntr.width()
 	});
 	
-	/*****selector table: first row*****/
+	/*****selector table: first row, first column*****/
 	var tr = $("<tr></tr>");
 	tr.appendTo(selector);
 	var td = $("<td></td>");
 	td.appendTo(tr);
 	td.html("选择任务类别");
+	td.css("width","90px");
+	
+	/*****selector table: third row*****/
+	tr = $("<tr></tr>");
+	tr.appendTo(selector);
+	td = $("<td></td>");
+	td.appendTo(tr);
+	td.html("选择数据集");
+	td = $("<td></td>");
+	td.appendTo(tr);
+	td.html("<input type = 'button' value = '打开数据集列表' onclick = 'Common.openWindow()'/>");
+	
+	/*****selector table: fourth row*****/
+	tr = $("<tr></tr>");
+	tr.appendTo(selector);
+	td = $("<td></td>");
+	td.appendTo(tr);
+	td.html("参数");
+	td = $("<td></td>");
+	td.appendTo(tr);
+	var width = cntr.width() - selector.find("tr").eq(0).find("td").eq(0).width() - 46;
+	var textarea = $("<textarea rows = '5'></textarea>");
+	textarea.appendTo(td);
+	textarea.css({
+		"width": width
+	});
+	
+	Task.loadTypeInfo();
+	
+	/*****create submit button*****/
+	var button = $("<input type = 'button' value = '执行任务' onclick = 'Task.run()'/>");
+	button.appendTo(cntr);
+	
+	Task.loadDslist();
+};
+
+Task.loadTypeInfo = function(){
+	var selector = $("#dtfragment-2").children("table").children("tbody");
 	$.getJSON(URL.getTaskType() + "?jsoncallback=?")
 		.done(function(data){
 			var taskTypeInfo = data.jTaskType;
 //			console.log(taskTypeInfo);
 			
+			/*****selector table: first row, second column*****/
+			var tr = selector.children("tr").eq(0);
 			td = $("<td></td>");
 			td.appendTo(tr);
 			var table = $("<table></table>");
@@ -369,44 +413,19 @@ Task.create = function(){
 				td.text("输出样式:");
 				td = $("<td></td>");
 				td.appendTo(tr);
-				td.text(taskTypeInfo[i].outputMeta);
+				var text = taskTypeInfo[i].outputMeta.split(",");
+				var html = text[0];
+				for(var j = 1; j < text.length; j++){
+					html += ", "+ text[j];
+				}
+				td.html(html);
 			}
 			$("#dtfragment-2-task-type-des-" + taskTypeInfo[0].id).css({
 				"display": "table-row"
 			});
-			
-			/*****selector table: third row*****/
-			tr = $("<tr></tr>");
-			tr.appendTo(selector);
-			td = $("<td></td>");
-			td.appendTo(tr);
-			td.html("选择数据集");
-			td = $("<td></td>");
-			td.appendTo(tr);
-			td.html("<input type = 'button' value = '打开数据集列表' onclick = 'Common.openWindow()'/>");
-			
-			/*****selector table: fourth row*****/
-			tr = $("<tr></tr>");
-			tr.appendTo(selector);
-			td = $("<td></td>");
-			td.appendTo(tr);
-			td.html("参数");
-			td = $("<td></td>");
-			td.appendTo(tr);
-			var width = cntr.width() - selector.find("tr").eq(0).find("td").eq(0).width() - 46;
-			var textarea = $("<textarea rows = '5'></textarea>");
-			textarea.appendTo(td);
-			textarea.css({
-				"width": width
-			});
-			
-			/*****create submit button*****/
-			var button = $("<input type = 'button' value = '执行任务' onclick = 'Task.run()'/>");
-			button.appendTo(cntr);
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
-	Task.loadDslist();
 };
 
 Task.showTypeInfo = function(tstype_id){
@@ -417,6 +436,23 @@ Task.showTypeInfo = function(tstype_id){
 		$("#dtfragment-2-task-type-des-" + id).css("display","none");
 	}
 	$("#dtfragment-2-task-type-des-" + tstype_id).css("display","table-row");
+};
+
+Task.refreshType = function(){
+	$.getJSON(URL.refreshTstype() + "?jsoncallback=?")
+		.done(function(data){
+//			console.log(data);
+			var radio = $("input[name='dtfragment-2-task-type']");
+			for(var i = 0; i < radio.length; i++){
+				var id = radio.eq(i).attr("value");
+				$("#dtfragment-2-task-type-des-" + id).remove();
+			}
+			var td = $("#dtfragment-2").children("table").children("tbody").children("tr").eq(0).children("td").eq(1);
+			td.remove();
+			Task.loadTypeInfo();
+		}).fail(function(){
+			alert("Oops, we got an error...");
+		});
 };
 
 /*****load dataset list as checkbox*****/

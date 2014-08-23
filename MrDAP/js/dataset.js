@@ -130,3 +130,25 @@ Dataset.showTable = function(ds_id){
 			alert("Oops, we got an error...");
 		});
 };
+
+Dataset.refresh = function(){
+	$.getJSON(URL.refreshDslist() + "?jsoncallback=?")
+		.done(function(data){
+//			console.log(data);
+			$("#dstree").remove();
+			var div = $("<div id = 'dstree'></div>");
+			div.appendTo("#dataset");
+			var ul = $("<ul class = 'dslist'></ul>");
+			ul.appendTo(div);
+			var height = $("#dataset").height();
+			div.css({
+				"height": height - 82
+			});
+			Dataset.loadList("dstree","list");
+			if(!$("#window").is(":empty")){
+				Task.loadDslist();
+			}
+		}).fail(function(){
+			alert("Oops, we got an error...");
+		});
+};

@@ -35,6 +35,7 @@ body{
 }
 
 #dstitle,#tstitle{
+	position: relative;
 	height: 29px;
 	margin-top: 10px;
 	padding-top: 10px;
@@ -42,6 +43,30 @@ body{
 	border-top: 1px solid #282828;
 	border-right: 1px solid #282828;
 	border-left: 1px solid #282828;
+}
+
+#dstitle a,#tstitle a{
+	position: absolute;
+	text-decoration: none;
+}
+
+#dstitle a{
+	left: 220px;
+}
+
+#dstitle a:link,#dstitle a:hover,#dstitle a:visited{
+	color: blue;
+}
+
+#dstitle img,#tstitle img{
+	position: absolute;
+	top: 12px;
+	width: 15px;
+	cursor: pointer;
+}
+
+#dstitle img{
+	left: 200px;
 }
 
 #dstree,#tslist{
@@ -64,33 +89,23 @@ body{
 	padding-left: 25px;
 }
 
-#tstitle{
-	position: relative;
-}
-
 #tstitle a{
-	position: absolute;
 	left: 320px;
-	text-decoration: none;
 }
 
-#tstitle a:link,a:hover,a:visited{
+#tstitle a:link,#tstitle a:hover,#tstitle a:visited{
 	color: green;
 }
 
 #tstitle img{
-	position: absolute;
-	top: 12px;
 	left: 300px;
-	width: 15px;
-	cursor: pointer;
 }
 
 #tslist{
 	text-align: center;
 }
 
-#tslist a:link,a:hover,a:visited{
+#tslist a:link,#tslist a:hover,#tslist a:visited{
 	color: red;
 }
 
@@ -110,7 +125,7 @@ body{
 	text-decoration: none;/*添加到文本的修饰*/
 }
 
-#footer a:link,a:hover,a:visited{
+#footer a:link,#footer a:hover,#footer a:visited{
 	color: green;
 }
 
