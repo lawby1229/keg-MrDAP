@@ -272,7 +272,7 @@ Task.showDetail = function(ts_id,status){
 		});
 };
 
-/*****create task*****/
+/*****create task selector*****/
 
 Task.create = function(){
 	/*****clear tab*****/
@@ -323,7 +323,7 @@ Task.create = function(){
 	td.html("参数");
 	td = $("<td></td>");
 	td.appendTo(tr);
-	var width = cntr.width() - selector.find("tr").eq(0).find("td").eq(0).width() - 46;
+	var width = cntr.width() - 136;
 	var textarea = $("<textarea rows = '5'></textarea>");
 	textarea.appendTo(td);
 	textarea.css({
@@ -338,6 +338,8 @@ Task.create = function(){
 	
 	Task.loadDslist();
 };
+
+/*****load task type*****/
 
 Task.loadTypeInfo = function(){
 	var selector = $("#dtfragment-2").children("table").children("tbody");
@@ -386,39 +388,12 @@ Task.loadTypeInfo = function(){
 				td.html("任务介绍");
 				td = $("<td></td>");
 				td.appendTo(tr);
-				
-				/*****use a table to show task type info*****/
-				table = $("<table></table>");
-				table.appendTo(td);
-				tr = $("<tr></tr>");
-				tr.appendTo(table);
-				td = $("<td></td>");
-				td.appendTo(tr);
-				td.text("任务描述:");
-				td = $("<td></td>");
-				td.appendTo(tr);
-				td.text(taskTypeInfo[i].description);
-				tr = $("<tr></tr>");
-				tr.appendTo(table);
-				td = $("<td></td>");
-				td.appendTo(tr);
-				td.text("输入样式:");
-				td = $("<td></td>");
-				td.appendTo(tr);
-				td.text(taskTypeInfo[i].inputMeta);
-				tr = $("<tr></tr>");
-				tr.appendTo(table);
-				td = $("<td></td>");
-				td.appendTo(tr);
-				td.text("输出样式:");
-				td = $("<td></td>");
-				td.appendTo(tr);
-				var text = taskTypeInfo[i].outputMeta.split(",");
-				var html = text[0];
-				for(var j = 1; j < text.length; j++){
-					html += ", "+ text[j];
-				}
-				td.html(html);
+				td.css({
+					"text-align": "left"
+				});
+				var text = taskTypeInfo[i].description;
+				text = text.replace(/\$\$/g,"<br/>");
+				td.html(text);
 			}
 			$("#dtfragment-2-task-type-des-" + taskTypeInfo[0].id).css({
 				"display": "table-row"
@@ -427,6 +402,8 @@ Task.loadTypeInfo = function(){
 			alert("Oops, we got an error...");
 		});
 };
+
+/*****show | hide task type's detail info*****/
 
 Task.showTypeInfo = function(tstype_id){
 //	console.log(tstype_id);
@@ -437,6 +414,8 @@ Task.showTypeInfo = function(tstype_id){
 	}
 	$("#dtfragment-2-task-type-des-" + tstype_id).css("display","table-row");
 };
+
+/*****refresh task type*****/
 
 Task.refreshType = function(){
 	$.getJSON(URL.refreshTstype() + "?jsoncallback=?")
