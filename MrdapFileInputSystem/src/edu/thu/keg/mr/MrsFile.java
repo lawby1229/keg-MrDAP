@@ -43,7 +43,7 @@ public class MrsFile implements XMLFile {
 		String fileName = "";
 		Node fileHeader = root.selectSingleNode("//fileHeader");
 		String startTime = fileHeader.valueOf("@startTime");
-		String endTime = fileHeader.valueOf("@startTime");
+		String endTime = fileHeader.valueOf("@endTime");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		try {
 			Date reportTime = sdf.parse(startTime);
@@ -67,7 +67,8 @@ public class MrsFile implements XMLFile {
 				if (!desc.exists()) {
 					FileWriter fw = new FileWriter(desc, true);
 					Node smr = measure.selectSingleNode("smr");
-					String attri = "towerId" + " " + "startTime" + " " + "id";
+					String attri = "towerId" + " " + "startTime" + " "
+							+ "endTime" + " " + "id";
 					fw.write(attri + " " + smr.getText().trim());
 					fw.close();
 				}
