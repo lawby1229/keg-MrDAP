@@ -305,7 +305,7 @@ Task.create = function(){
 	td.html("选择任务类别");
 	td.css("width","90px");
 	
-	/*****selector table: third row*****/
+	/*****selector table: second row*****/
 	tr = $("<tr></tr>");
 	tr.appendTo(selector);
 	td = $("<td></td>");
@@ -314,21 +314,6 @@ Task.create = function(){
 	td = $("<td></td>");
 	td.appendTo(tr);
 	td.html("<input type = 'button' value = '打开数据集列表' onclick = 'Common.openWindow()'/>");
-	
-	/*****selector table: fourth row*****/
-	tr = $("<tr></tr>");
-	tr.appendTo(selector);
-	td = $("<td></td>");
-	td.appendTo(tr);
-	td.html("参数");
-	td = $("<td></td>");
-	td.appendTo(tr);
-	var width = cntr.width() - 136;
-	var textarea = $("<textarea rows = '5'></textarea>");
-	textarea.appendTo(td);
-	textarea.css({
-		"width": width
-	});
 	
 	Task.loadTypeInfo();
 	
@@ -345,7 +330,13 @@ Task.loadTypeInfo = function(){
 	var selector = $("#dtfragment-2").children("table").children("tbody");
 	$.getJSON(URL.getTaskType() + "?jsoncallback=?")
 		.done(function(data){
-			var taskTypeInfo = data.jTaskType;
+			var taskTypeInfo;
+			if(Common.isObject(data.jTaskType)){
+				taskTypeInfo = [];
+				taskTypeInfo[0] = data.jTaskType;
+			}else{
+				taskTypeInfo = data.jTaskType;
+			}
 //			console.log(taskTypeInfo);
 			
 			/*****selector table: first row, second column*****/
@@ -354,7 +345,7 @@ Task.loadTypeInfo = function(){
 			td.appendTo(tr);
 			var table = $("<table></table>");
 			table.appendTo(td);
-			/*****warning: task type info's length must >= 2*****/
+			
 			for(var i = 0; i < taskTypeInfo.length; i++){
 				if(i % 3 === 0){
 					tr = $("<tr></tr>");
@@ -375,11 +366,34 @@ Task.loadTypeInfo = function(){
 			}
 			$("input[name='dtfragment-2-task-type']").eq(0).prop("checked",true);
 			
-			/*****selector table: second row, hidden row*****/
+			/*****selector table: hidden row*****/
 			for(var i = 0; i < taskTypeInfo.length; i++){
+				var args = JSON.parse(taskTypeInfo[i].args);
+				var keys = Object.keys(args);
+				for(var j = 0; j < keys.length; j++){
+					var value = args[keys[j]];
+					tr = $("<tr></tr>");
+					tr.appendTo(selector);
+					tr.attr("id","dtfragment-2-task-type-" + taskTypeInfo[i].id + "-" + keys[j]);
+					tr.css({
+						"display": "none"
+					});
+					td = $("<td></td>");
+					td.appendTo(tr);
+					td.html(value.name);
+					td = $("<td></td>");
+					td.appendTo(tr);
+					var input = $("<input/>");
+					input.appendTo(td);
+					input.attr("type","text");
+					if(value.defaultValue != "null"){
+						input.attr("value",value.defaultValue);
+					}
+				}
+				
 				tr = $("<tr></tr>");
 				tr.appendTo(selector);
-				tr.attr("id","dtfragment-2-task-type-des-" + taskTypeInfo[i].id);
+				tr.attr("id","dtfragment-2-task-type-" + taskTypeInfo[i].id + "-des");
 				tr.css({
 					"display": "none"
 				});
@@ -395,7 +409,7 @@ Task.loadTypeInfo = function(){
 				text = text.replace(/\$\$/g,"<br/>");
 				td.html(text);
 			}
-			$("#dtfragment-2-task-type-des-" + taskTypeInfo[0].id).css({
+			$("[id^='dtfragment-2-task-type-" + taskTypeInfo[0].id + "-']").css({
 				"display": "table-row"
 			});
 		}).fail(function(){
@@ -410,9 +424,9 @@ Task.showTypeInfo = function(tstype_id){
 	var radio = $("input[name='dtfragment-2-task-type']");
 	for(var i = 0; i < radio.length; i++){
 		var id = radio.eq(i).attr("value");
-		$("#dtfragment-2-task-type-des-" + id).css("display","none");
+		$("[id^='dtfragment-2-task-type-" + id + "-']").css("display","none");
 	}
-	$("#dtfragment-2-task-type-des-" + tstype_id).css("display","table-row");
+	$("[id^='dtfragment-2-task-type-" + tstype_id + "-']").css("display","table-row");
 };
 
 /*****refresh task type*****/
@@ -457,10 +471,6 @@ Task.loadDslist = function(){
 Task.run = function(){
 	/*****get task type*****/
 	var typeId = $("input[name='dtfragment-2-task-type']:checked").val();
-	if(typeId === undefined){
-		alert("选择一类任务!");
-		return;
-	}
 //	console.log(typeId);
 	
 	/*****get selected datasets*****/
@@ -483,14 +493,22 @@ Task.run = function(){
 	});
 //	console.log(datasets);
 	
-	/*****get parameter text*****/
-	var tr = $("#dtfragment-2").children("table").children("tbody").children("tr").eq(2);
-	var param = tr.children("td").eq(1).children("textarea").val();
-//	console.log(param);
+	/*****get parameter*****/
+	var param = $("[id^='dtfragment-2-task-type-" + typeId + "-']");
+	var params = $.parseJSON("{}");
+	for(var i = 0; i < param.length - 1; i++){
+		var id = param.eq(i).attr("id");
+		var temp = id.split("-");
+		params[temp[temp.length - 1]] = param.eq(i).children("td").eq(1).children("input").val();
+	}
+//	console.log(params);
 	
 	/*****run task*****/
-	$.getJSON(URL.runTask() + "?jsoncallback=?" + "&typeId=" + typeId + "&datasets=" + JSON.stringify(datasets) + "&param=" + param)
-		.done(function(data){
+	$.getJSON(URL.runTask() + "?jsoncallback=?",{
+		"typeId": typeId,
+		"tables": JSON.stringify(datasets),
+		"params": JSON.stringify(params)
+	}).done(function(data){
 //			console.log(data);
 			/*****alert info*****/
 			if(data.status === "RUNNING"){

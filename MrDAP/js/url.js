@@ -5,7 +5,7 @@ URL.head = "";
 /*****dataset url*****/
 
 URL.getDatasetList = function(){
-	return URL.head + "/rest/dsg/getalldss";
+	return URL.head + "/rest/dsg/getallhdss";
 };
 
 URL.getDatasetInfo = function(){
@@ -39,7 +39,7 @@ URL.getTaskStatus = function(){
 };
 
 URL.runTask = function(){
-	return URL.head + "/rest/tsg/runtask";
+	return URL.head + "/rest/tsg/runhtask";
 };
 
 URL.stopTask = function(){
