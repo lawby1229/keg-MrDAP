@@ -2,20 +2,6 @@ URL = {};
 
 URL.head = "";
 
-/*****dataset url*****/
-
-URL.getDatasetList = function(){
-	return URL.head + "/rest/dsg/getallhdss";
-};
-
-URL.getDatasetInfo = function(){
-	return URL.head + "/rest/dsg/getds";
-};
-
-URL.refreshDslist = function(){
-	return URL.head + "/rest/dsg/refresh";
-};
-
 /*****task url*****/
 
 URL.getTaskList = function(){
@@ -28,6 +14,10 @@ URL.getTaskInfo = function(){
 
 URL.getTaskType = function(){
 	return URL.head + "/rest/tsg/tstypes";
+};
+
+URL.getTable = function(){
+	return URL.head + "/rest/dsg/gethds"
 };
 
 URL.refreshTstype = function(){
@@ -54,4 +44,4 @@ URL.removeTask = function(){
 
 URL.download = function(){
 	return URL.head + "/rest/tsg/dl";
-};
+};;

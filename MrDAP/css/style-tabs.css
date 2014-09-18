@@ -25,24 +25,21 @@
 	outline-width: 0;
 }
 
+/*****div#tab*****/
+
 #dtfragment-1,#dtfragment-2{
+	position: relative;
 	padding: 10px 20px;
+	text-align: center;
+	font-size: 16px;
+	font-family: Times New Roman,'楷体';
 	overflow: auto;
 	border-radius: 0;
 }
 
-#dtfragment-1,#dtfragment-2{
-	position: relative;
-	text-align: center;
-	font-size: 16px;
-	font-family: Times New Roman,'楷体';
-}
+/*****tab.1#create task module*****/
 
-#dtfragment-1 span,.dtfragment-2-title{
-	font-weight: bold;
-}
-
-#dtfragment-2 img{
+.dtfragment-1-img{
 	position: absolute;
 	top: 12px;
 	right: 120px;
@@ -50,34 +47,37 @@
 	cursor: pointer;
 }
 
-.dtfragment-2-a{
+.dtfragment-1-a{
 	position: absolute;
 	top: 10px;
 	right: 20px;
 	text-decoration: none;
 }
 
-.dtfragment-2-a:link,.dtfragment-2-a:hover,.dtfragment-2-a:visited{
+.dtfragment-1-a:link,.dtfragment-1-a:hover,.dtfragment-1-a:visited{
 	color: blue;
 }
 
-#dstable-cntr,#tstable-cntr,.dtfragment-2-selector{
-	margin-top: 10px;
-}
-
-.dtfragment-2-selector{
+.dtfragment-1-selector{
+	margin-top: 25px;
 	margin-bottom: 10px;
 	border: 1px solid #282828;
 	border-spacing: 0;
 }
 
-.dtfragment-2-selector td{
+.dtfragment-1-selector td{
 	margin: 0;
 	padding: 5px 10px;
 	border: 1px solid #282828;
 }
 
-.dtfragment-2-selector table td{
+.dtfragment-1-selector table td{
 	text-align: left;
 	border: 0;
+}
+
+/*****tab.2#show task detail*****/
+
+#tstable-cntr{
+	margin-top: 10px;
 }

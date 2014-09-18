@@ -94,11 +94,11 @@ Task.bulidRow = function(data,tr){
 	
 	td = $("<td></td>");
 	td.appendTo(tr);
-	var html = "<input type = 'button' style = 'font-family: Times New Roman,楷体;' value = '查看' onclick = 'Task.showDetail(\"" + data.id + "\",\"open\")'/>";
+	var html = "<input type = 'button' value = '查看' onclick = 'Task.showDetail(\"" + data.id + "\",\"open\")'/>";
 	if(data.taskstatus === "RUNNING"){
-		html += "<input type = 'button' style = 'font-family: Times New Roman,楷体;' value = '中止' onclick = 'Task.stop(\"" + data.id + "\")'/>";
+		html += "<input type = 'button' value = '中止' onclick = 'Task.stop(\"" + data.id + "\")'/>";
 	}else{
-		html += "<input type = 'button' style = 'font-family: Times New Roman,楷体;' value = '删除' onclick = 'Task.remove(\"" + data.id + "\")'/>";
+		html += "<input type = 'button' value = '删除' onclick = 'Task.remove(\"" + data.id + "\")'/>";
 	}
 	td.html(html);
 };
@@ -170,16 +170,16 @@ Task.showDetail = function(ts_id,status){
 			td.appendTo(tr);
 			var html = "";
 			if(tsdata.taskstatus === "RUNNING"){
-				html = "<input type = 'button' style = 'font-family: Times New Roman,楷体;' value = '中止' onclick = 'Task.stop(\"" + tsdata.id + "\")'/>";
+				html = "<input type = 'button' value = '中止' onclick = 'Task.stop(\"" + tsdata.id + "\")'/>";
 			}else{
-				html = "<input type = 'button' style = 'font-family: Times New Roman,楷体;' value = '删除' onclick = 'Task.remove(\"" + tsdata.id + "\")'/>";
+				html = "<input type = 'button' value = '删除' onclick = 'Task.remove(\"" + tsdata.id + "\")'/>";
 			}
 			td.html(html);
 			/*****if task done, download file*****/
 			if(tsdata.taskstatus === "SUCCEEDED"){
 				var a = $("<a target = '_self' href = '" + URL.download() + "?id=" + tsdata.id + "'></a>");
 				a.appendTo(td);
-				var input = $("<input type = 'button' style = 'font-family: Times New Roman,楷体;' value = '下载'/>");
+				var input = $("<input type = 'button' value = '下载'/>");
 				input.appendTo(a);
 			}
 			
@@ -272,32 +272,24 @@ Task.showDetail = function(ts_id,status){
 		});
 };
 
-/*****create task selector*****/
+/*****load create task module*****/
 
-Task.create = function(){
-	/*****clear tab*****/
-	var cntr = $("#dtfragment-2");
-	cntr.empty();
-	/*****switch to this tab*****/
-	$("#dttabs").tabs("option","active",1);
+Task.loadModule = function(){
+	var cntr = $("#dtfragment-1");
 	
-	/*****create title & selector*****/
-	var title = $("<span></span>");
-	title.attr("class","dtfragment-2-title");
-	title.appendTo(cntr);
-	title.text("新建任务");
-	var img = $("<img src='css/images/refresh_512x512.png' onclick='Task.refreshType()'/>");
+	/*****create refresh icon & selector*****/
+	var img = $("<img class = 'dtfragment-1-img' src='css/images/refresh_512x512.png' onclick='Task.refreshType()'/>");
 	img.appendTo(cntr);
-	var a = $("<a class = 'dtfragment-2-a' href = 'javascript:void(0)' onclick = 'Task.refreshType()'>刷新任务类别</a>");
+	var a = $("<a class = 'dtfragment-1-a' href = 'javascript:void(0)' onclick = 'Task.refreshType()'>刷新任务类别</a>");
 	a.appendTo(cntr);
 	var selector = $("<table></table>");
-	selector.attr("class","dtfragment-2-selector");
+	selector.attr("class","dtfragment-1-selector");
 	selector.appendTo(cntr);
 	selector.css({
 		"width": cntr.width()
 	});
 	
-	/*****selector table: first row, first column*****/
+	/*****first row, first column*****/
 	var tr = $("<tr></tr>");
 	tr.appendTo(selector);
 	var td = $("<td></td>");
@@ -305,7 +297,7 @@ Task.create = function(){
 	td.html("选择任务类别");
 	td.css("width","90px");
 	
-	/*****selector table: second row*****/
+	/*****second row*****/
 	tr = $("<tr></tr>");
 	tr.appendTo(selector);
 	td = $("<td></td>");
@@ -313,21 +305,30 @@ Task.create = function(){
 	td.html("选择数据集");
 	td = $("<td></td>");
 	td.appendTo(tr);
-	td.html("<input type = 'button' value = '打开数据集列表' onclick = 'Common.openWindow()'/>");
+	var table = $("<table></table>");
+	table.appendTo(td);
+	td.append("<input type = 'button' value = '打开数据集列表' onclick = 'Task.openWindow()'/>");
+	tr = $("<tr></tr>");
+	tr.appendTo(table);
+	td = $("<td></td>");
+	td.appendTo(tr);
+	td.text("已选择数据集:");
+	td = $("<td></td>");
+	td.appendTo(tr);
+	td.attr("class","dtfragment-1-show-selected-table");
+	td.text("无");
 	
 	Task.loadTypeInfo();
 	
 	/*****create submit button*****/
 	var button = $("<input type = 'button' value = '执行任务' onclick = 'Task.run()'/>");
 	button.appendTo(cntr);
-	
-	Task.loadDslist();
 };
 
 /*****load task type*****/
 
 Task.loadTypeInfo = function(){
-	var selector = $("#dtfragment-2").children("table").children("tbody");
+	var selector = $("#dtfragment-1").children("table").children("tbody");
 	$.getJSON(URL.getTaskType() + "?jsoncallback=?")
 		.done(function(data){
 			var taskTypeInfo;
@@ -339,15 +340,15 @@ Task.loadTypeInfo = function(){
 			}
 //			console.log(taskTypeInfo);
 			
-			/*****selector table: first row, second column*****/
+			/*****first row, second column*****/
 			var tr = selector.children("tr").eq(0);
-			td = $("<td></td>");
+			var td = $("<td></td>");
 			td.appendTo(tr);
 			var table = $("<table></table>");
 			table.appendTo(td);
 			
 			for(var i = 0; i < taskTypeInfo.length; i++){
-				if(i % 3 === 0){
+				if(i % 4 === 0){
 					tr = $("<tr></tr>");
 					tr.appendTo(table);
 				}
@@ -356,25 +357,28 @@ Task.loadTypeInfo = function(){
 				var radio = $("<input/>");
 				radio.appendTo(td);
 				radio.attr("type","radio");
-				radio.attr("name","dtfragment-2-task-type");
+				radio.attr("name","dtfragment-1-task-type");
 				radio.attr("value",taskTypeInfo[i].id);
-				radio.attr("onclick","Task.showTypeInfo('" + taskTypeInfo[i].id + "')");
+				radio.attr("onclick","Task.switchType('" + taskTypeInfo[i].id + "')");
 				
-				span = $("<span></span>");
+				var span = $("<span></span>");
 				span.appendTo(td);
 				span.html(taskTypeInfo[i].name);
 			}
-			$("input[name='dtfragment-2-task-type']").eq(0).prop("checked",true);
+			$("input[name='dtfragment-1-task-type']").eq(0).prop("checked",true);
+			Task.loadTable(taskTypeInfo[0].id);
 			
-			/*****selector table: hidden row*****/
+			/*****hidden row*****/
 			for(var i = 0; i < taskTypeInfo.length; i++){
 				var args = JSON.parse(taskTypeInfo[i].args);
 				var keys = Object.keys(args);
+				
+				/*****parameter*****/
 				for(var j = 0; j < keys.length; j++){
 					var value = args[keys[j]];
 					tr = $("<tr></tr>");
 					tr.appendTo(selector);
-					tr.attr("id","dtfragment-2-task-type-" + taskTypeInfo[i].id + "-" + keys[j]);
+					tr.attr("id","dtfragment-1-task-type-" + taskTypeInfo[i].id + "-" + keys[j]);
 					tr.css({
 						"display": "none"
 					});
@@ -391,9 +395,10 @@ Task.loadTypeInfo = function(){
 					}
 				}
 				
+				/*****description*****/
 				tr = $("<tr></tr>");
 				tr.appendTo(selector);
-				tr.attr("id","dtfragment-2-task-type-" + taskTypeInfo[i].id + "-des");
+				tr.attr("id","dtfragment-1-task-type-" + taskTypeInfo[i].id + "-des");
 				tr.css({
 					"display": "none"
 				});
@@ -409,7 +414,7 @@ Task.loadTypeInfo = function(){
 				text = text.replace(/\$\$/g,"<br/>");
 				td.html(text);
 			}
-			$("[id^='dtfragment-2-task-type-" + taskTypeInfo[0].id + "-']").css({
+			$("[id^='dtfragment-1-task-type-" + taskTypeInfo[0].id + "-']").css({
 				"display": "table-row"
 			});
 		}).fail(function(){
@@ -417,16 +422,22 @@ Task.loadTypeInfo = function(){
 		});
 };
 
-/*****show | hide task type's detail info*****/
+/*****switch task type*****/
 
-Task.showTypeInfo = function(tstype_id){
+Task.switchType = function(tstype_id){
 //	console.log(tstype_id);
-	var radio = $("input[name='dtfragment-2-task-type']");
+	var radio = $("input[name='dtfragment-1-task-type']");
 	for(var i = 0; i < radio.length; i++){
 		var id = radio.eq(i).attr("value");
-		$("[id^='dtfragment-2-task-type-" + id + "-']").css("display","none");
+		$("[id^='dtfragment-1-task-type-" + id + "-']").css("display","none");
 	}
-	$("[id^='dtfragment-2-task-type-" + tstype_id + "-']").css("display","table-row");
+	$("[id^='dtfragment-1-task-type-" + tstype_id + "-']").css("display","table-row");
+	
+	Task.loadTable(tstype_id);
+	
+	var td = $(".dtfragment-1-show-selected-table");
+	td.empty();
+	td.text("无");
 };
 
 /*****refresh task type*****/
@@ -435,66 +446,132 @@ Task.refreshType = function(){
 	$.getJSON(URL.refreshTstype() + "?jsoncallback=?")
 		.done(function(data){
 //			console.log(data);
-			var radio = $("input[name='dtfragment-2-task-type']");
+			var radio = $("input[name='dtfragment-1-task-type']");
 			for(var i = 0; i < radio.length; i++){
 				var id = radio.eq(i).attr("value");
-				$("#dtfragment-2-task-type-des-" + id).remove();
+				$("[id^='dtfragment-1-task-type-" + id + "-']").remove();
 			}
-			var td = $("#dtfragment-2").children("table").children("tbody").children("tr").eq(0).children("td").eq(1);
+			var td = $("#dtfragment-1").children("table").children("tbody").children("tr").eq(0).children("td").eq(1);
 			td.remove();
 			Task.loadTypeInfo();
+			
+			td = $(".dtfragment-1-show-selected-table");
+			td.empty();
+			td.text("无");
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
 };
 
-/*****load dataset list as checkbox*****/
+/*****load table belong to task type*****/
 
-Task.loadDslist = function(){
+Task.loadTable = function(tstype_id){
 	var window = $("#window");
 	window.empty();
-	var dstree = $("<div></div>");
-	dstree.attr("id","dstree-float");
-	dstree.appendTo(window);
-	var ul = $("<ul></ul>");
-	ul.attr("class","dslist-float");
-	ul.appendTo(dstree);
-	Dataset.loadList("dstree-float","checkbox");
 	var img = $("<img/>");
 	img.appendTo(window);
 	img.attr("src","css/images/close_256x256.png");
-	img.attr("onclick","Common.closeWindow()");
+	img.attr("onclick","Task.closeWindow()");
+	var title = $("<span></span>");
+	title.attr("class","window-title");
+	title.appendTo(window);
+	title.text("选择数据集");
+	$.getJSON(URL.getTable() + "?jsoncallback=?" + "&id=" + tstype_id)
+		.done(function(data){
+			var dataTable;
+			if(Common.isObject(data.jDataset)){
+				dataTable = [];
+				dataTable[0] = data.jDataset;
+			}else{
+				dataTable = data.jDataset;
+			}
+			console.log(dataTable);
+			
+			/*****create checkbox*****/
+			var table = $("<table></table>");
+			table.appendTo(window);
+			var tr;
+			for(var i = 0; i < dataTable.length; i++){
+				if(i % 1 === 0){
+					tr = $("<tr></tr>");
+					tr.appendTo(table);
+				}
+				var td = $("<td></td>");
+				td.appendTo(tr);
+				var checkbox = $("<input/>");
+				checkbox.appendTo(td);
+				checkbox.attr("type","checkbox");
+				checkbox.attr("name","window-checkbox");
+				checkbox.attr("value",dataTable[i].id);
+				var span = $("<span></span>");
+				span.appendTo(td);
+				span.html(dataTable[i].name);
+			}
+			
+			var button = $("<input/>");
+			button.appendTo(window);
+			button.attr("type","button");
+			button.attr("value","确认");
+			button.attr("onclick","Task.closeWindow()");
+		}).fail(function(){
+			alert("Oops, we got an error...");
+		});
+};
+
+/*****open window*****/
+
+Task.openWindow = function(){
+	Common.openWindow();
+	$("#background").css("display","block");
+};
+
+/*****close window*****/
+
+Task.closeWindow = function(){
+	Common.closeWindow();
+	$("#background").css("display","none");
+	var td = $(".dtfragment-1-show-selected-table");
+	td.empty();
+	
+	var checkbox = $("input[name='window-checkbox']:checked");
+	if(checkbox.length === 0){
+		td.text("无");
+	}else{
+		table = $("<table></table>");
+		table.appendTo(td);
+		var tr;
+		for(var i = 0; i < checkbox.length; i++){
+			if(i % 3 === 0){
+				tr = $("<tr></tr>");
+				tr.appendTo(table);
+			}
+			td = $("<td></td>");
+			td.appendTo(tr);
+			td.text(checkbox.eq(i).val());
+		}
+	}
 };
 
 /*****run task*****/
 
 Task.run = function(){
 	/*****get task type*****/
-	var typeId = $("input[name='dtfragment-2-task-type']:checked").val();
+	var typeId = $("input[name='dtfragment-1-task-type']:checked").val();
 //	console.log(typeId);
 	
-	/*****get selected datasets*****/
-	var datasets = $.parseJSON("[]");
-	var top_checked = $("#dstree-float").jstree("get_top_checked",true);
-	if(top_checked.length === 0){
-		alert("选择一个数据集!");
+	/*****get selected table*****/
+	var dataTable = $.parseJSON("[]");
+	$("input[name='window-checkbox']:checked").each(function(){
+		dataTable.push($(this).val());
+	});
+	console.log(dataTable);
+	if(dataTable.length === 0){
+		alert("请选择一个或多个数据表!");
 		return;
 	}
 	
-	/*****close checkbox window*****/
-	Common.closeWindow();
-	$.each(top_checked,function(index,value){
-//		console.log(this.id);
-		$("#dstree-float").jstree("open_all",this.id);
-	});
-	$.each($("#dstree-float").jstree("get_bottom_checked",true),function(index,value){
-//		console.log(this.id);
-		datasets[index] = $("#" + this.id).children("a").children("span").attr("id");
-	});
-//	console.log(datasets);
-	
 	/*****get parameter*****/
-	var param = $("[id^='dtfragment-2-task-type-" + typeId + "-']");
+	var param = $("[id^='dtfragment-1-task-type-" + typeId + "-']");
 	var params = $.parseJSON("{}");
 	for(var i = 0; i < param.length - 1; i++){
 		var id = param.eq(i).attr("id");
@@ -503,13 +580,15 @@ Task.run = function(){
 	}
 //	console.log(params);
 	
+	$("#background").css("display","block");
 	/*****run task*****/
 	$.getJSON(URL.runTask() + "?jsoncallback=?",{
 		"typeId": typeId,
-		"tables": JSON.stringify(datasets),
+		"tables": JSON.stringify(dataTable),
 		"params": JSON.stringify(params)
 	}).done(function(data){
 //			console.log(data);
+			$("#background").css("display","none");
 			/*****alert info*****/
 			if(data.status === "RUNNING"){
 				alert("成功新建任务!");
@@ -519,9 +598,6 @@ Task.run = function(){
 			if(data.status === "FAILED"){
 				alert("新建任务失败!");
 			}
-			
-			/*****reload checkbox window*****/
-			Task.loadDslist();
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});

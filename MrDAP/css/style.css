@@ -2,11 +2,7 @@ body{
 	margin: 0;
 }
 
-#main{
-	position: relative;
-}
-
-/*****div#header*****/
+/*****div#head*****/
 
 #header{
 	height: 125px;
@@ -21,21 +17,23 @@ body{
 	color: #ff8040;
 }
 
-/*****div#dataset*****/
+/*****div#main*****/
 
-#dataset,#detail,#task{
+#main{
+	position: relative;
+}
+
+/*****div#task*****/
+
+#task{
 	float: left;
+	width: 480px;
+	padding-left: 25px;
 	font-size: 16px;
 	font-family: Times New Roman,'楷体';
 }
 
-#dataset{
-	width: 270px;
-	padding-left: 50px;
-}
-
-#dstitle,#tstitle{
-	position: relative;
+#tstitle{
 	height: 29px;
 	margin-top: 10px;
 	padding-top: 10px;
@@ -45,33 +43,10 @@ body{
 	border-left: 1px solid #282828;
 }
 
-#dstitle a,#tstitle a{
-	position: absolute;
-	text-decoration: none;
-}
-
-#dstitle a{
-	left: 220px;
-}
-
-#dstitle a:link,#dstitle a:hover,#dstitle a:visited{
-	color: blue;
-}
-
-#dstitle img,#tstitle img{
-	position: absolute;
-	top: 12px;
-	width: 15px;
-	cursor: pointer;
-}
-
-#dstitle img{
-	left: 200px;
-}
-
-#dstree,#tslist{
+#tslist{
 	margin: 0;
 	padding: 10px 15px;
+	text-align: center;
 	border: 1px solid #282828;
 	overflow: auto;
 }
@@ -79,37 +54,14 @@ body{
 /*****div#detail*****/
 
 #detail{
+	float: left;
+	width: 640px;
 	padding-left: 25px;
+	font-size: 16px;
+	font-family: Times New Roman,'楷体';
 }
 
-/*****div#task*****/
-
-#task{
-	width: 415px;
-	padding-left: 25px;
-}
-
-#tstitle a{
-	left: 320px;
-}
-
-#tstitle a:link,#tstitle a:hover,#tstitle a:visited{
-	color: green;
-}
-
-#tstitle img{
-	left: 300px;
-}
-
-#tslist{
-	text-align: center;
-}
-
-#tslist a:link,#tslist a:hover,#tslist a:visited{
-	color: red;
-}
-
-/*****div#footer*****/
+/*****div#foot*****/
 
 #footer{
 	padding: 10px 0;
@@ -133,8 +85,8 @@ body{
 
 #window{
 	position: absolute;
-	top: 100px;
-	width: 270px;
+	top: 150px;
+	width: 120px;
 	margin: 0;
 	padding: 10px 15px;
 	overflow: auto;
@@ -142,6 +94,7 @@ body{
 	border: 1px solid #282828;
 	z-index: 1000;
 	display: none;
+	text-align: center;
 }
 
 #window img{
@@ -150,4 +103,20 @@ body{
 	right: 10px;
 	width: 15px;
 	cursor: pointer;
+}
+
+#window table{
+	padding: 20px;
+}
+
+/*****special div#background*****/
+
+#background{
+	width: 100%;
+	height: 100%;
+	z-index: 999;
+	background-color: rgb(128,128,128);
+	opacity: 0.6;
+	position: absolute;
+	display: none;
 }
