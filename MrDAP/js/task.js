@@ -1,5 +1,16 @@
 Task = {};
 
+Task.translate = {
+	"RUNNING": "运行",
+	"SUCCEEDED": "成功",
+	"FAILED": "失败",
+	"KILLED": "中止",
+	"运行": "RUNNING",
+	"成功": "SUCCEEDED",
+	"失败": "FAILED",
+	"中止": "KILLED"
+};
+
 /*****load task list*****/
 
 Task.loadList = function(){
@@ -90,7 +101,7 @@ Task.bulidRow = function(data,tr){
 	
 	td = $("<td></td>");
 	td.appendTo(tr);
-	td.html("<span id = '" + data.id + "'>" + data.taskstatus + "</span>");
+	td.html("<span id = '" + data.id + "'>" + Task.translate[data.taskstatus] + "</span>");
 	
 	td = $("<td></td>");
 	td.appendTo(tr);
@@ -164,7 +175,7 @@ Task.showDetail = function(ts_id,status){
 			
 			td = $("<td></td>");
 			td.appendTo(tr);
-			td.html("<span id = '" + tsdata.id + "'>" + tsdata.taskstatus + "</span>");
+			td.html("<span id = '" + tsdata.id + "'>" + Task.translate[tsdata.taskstatus] + "</span>");
 			
 			td = $("<td></td>");
 			td.appendTo(tr);
@@ -466,53 +477,57 @@ Task.refreshType = function(){
 /*****load table belong to task type*****/
 
 Task.loadTable = function(tstype_id){
-	var window = $("#window");
-	window.empty();
-	var img = $("<img/>");
-	img.appendTo(window);
-	img.attr("src","css/images/close_256x256.png");
-	img.attr("onclick","Task.closeWindow()");
-	var title = $("<span></span>");
-	title.attr("class","window-title");
-	title.appendTo(window);
-	title.text("选择数据集");
+	var cntr = $(".window-table-cntr");
+	cntr.empty();
+	var table = $("<table></table>");
+	table.appendTo(cntr);
+	table.attr("id","window-table");
+	table.attr("class","display");
+	
 	$.getJSON(URL.getTable() + "?jsoncallback=?" + "&id=" + tstype_id)
 		.done(function(data){
-			var dataTable;
+			var tableList;
 			if(Common.isObject(data.jDataset)){
-				dataTable = [];
-				dataTable[0] = data.jDataset;
+				tableList = [];
+				tableList[0] = data.jDataset;
 			}else{
-				dataTable = data.jDataset;
+				tableList = data.jDataset;
 			}
-			console.log(dataTable);
+//			console.log(tableList);
 			
+			var thead = $("<thead></thead>");
+			thead.appendTo(table);
+			var tbody = $("<tbody></tbody>");
+			tbody.appendTo(table);
+			
+			/*****create thead*****/
+			var tr = $("<tr></tr>");
+			tr.appendTo(thead);
+			var title = ["数据集"];
+			for(var i = 0; i < 1; i++){
+				var th = $("<th></th>");
+				th.appendTo(tr);
+				th.text(title[i]);
+			}
 			/*****create checkbox*****/
-			var table = $("<table></table>");
-			table.appendTo(window);
-			var tr;
-			for(var i = 0; i < dataTable.length; i++){
-				if(i % 1 === 0){
-					tr = $("<tr></tr>");
-					tr.appendTo(table);
-				}
+			for(var i = 0; i < tableList.length; i++){
+				var tr = $("<tr></tr>");
+				tr.appendTo(tbody);
 				var td = $("<td></td>");
 				td.appendTo(tr);
 				var checkbox = $("<input/>");
 				checkbox.appendTo(td);
 				checkbox.attr("type","checkbox");
 				checkbox.attr("name","window-checkbox");
-				checkbox.attr("value",dataTable[i].id);
+				checkbox.attr("value",tableList[i].id);
 				var span = $("<span></span>");
 				span.appendTo(td);
-				span.html(dataTable[i].name);
+				span.html(tableList[i].name);
 			}
 			
-			var button = $("<input/>");
-			button.appendTo(window);
-			button.attr("type","button");
-			button.attr("value","确认");
-			button.attr("onclick","Task.closeWindow()");
+			$("#window-table").DataTable({
+				ordering: false
+			});
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
@@ -564,7 +579,7 @@ Task.run = function(){
 	$("input[name='window-checkbox']:checked").each(function(){
 		dataTable.push($(this).val());
 	});
-	console.log(dataTable);
+//	console.log(dataTable);
 	if(dataTable.length === 0){
 		alert("请选择一个或多个数据表!");
 		return;
@@ -618,7 +633,7 @@ Task.refreshStatus = function(index){
 	/*****get task id*****/
 	var tr = $("#tslist").children("div").children("table").children("tbody").children("tr").eq(index);
 	var span = tr.children("td").eq(2).children("span");
-	if(span.text() != "RUNNING"){
+	if(Task.translate[span.text()] != "RUNNING"){
 		return;
 	};
 	var id = span.attr("id");
@@ -630,12 +645,12 @@ Task.refreshStatus = function(index){
 			/*****set new status*****/
 			var new_text = data.taskstatus;
 //			console.log(new_text);
-			span.text(new_text);
+			span.text(Task.translate[new_text]);
 			
 			/*****if status changes, change button; if tab shows this task's detail info, refresh it*****/
 			if(new_text != "RUNNING"){
-				var new_html = "<input type = 'button' style = 'font-family: Times New Roman,楷体;' value = '查看' onclick = 'Task.showDetail(\"" + id + "\",\"open\")'/>";
-				new_html += "<input type = 'button' style = 'font-family: Times New Roman,楷体;' value = '删除' onclick = 'Task.remove(\"" + id + "\")'/>";
+				var new_html = "<input type = 'button' value = '查看' onclick = 'Task.showDetail(\"" + id + "\",\"open\")'/>";
+				new_html += "<input type = 'button' value = '删除' onclick = 'Task.remove(\"" + id + "\")'/>";
 				var td = tr.children("td").eq(3);
 				td.html(new_html);
 				

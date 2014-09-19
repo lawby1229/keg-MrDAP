@@ -57,6 +57,18 @@ Common.setStyle = function(){
 	$("#dttabs").css("height",height - 22);
 	$("#dtfragment-1").css("height",height - 88);
 	$("#dtfragment-2").css("height",height - 88);
+	
+	var window_h = 400;
+	if(height > 400){
+		window_h = 500;
+	}
+	
+	$("#window").css({
+		"top": (height + 165 - window_h) / 2,
+		"left": (width - 600) / 2,
+		"height": window_h
+	});
+	$(".window-table-cntr").css("height",window_h - 63);
 };
 
 /*****get base url*****/
