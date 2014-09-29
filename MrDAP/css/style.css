@@ -105,6 +105,20 @@ body{
 	text-align: left;
 }
 
+/*****special div#waiting window*****/
+
+#window-waiting{
+	position: absolute;
+	width: 175px;
+	height: 175px;
+	z-index: 1000;
+	display: none;
+	text-align: center;
+	font-size: 24px;
+	font-family: Times New Roman,'楷体';
+	font-weight: bolder;
+}
+
 /*****special div#background*****/
 
 #background{

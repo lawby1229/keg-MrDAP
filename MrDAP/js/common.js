@@ -57,6 +57,10 @@ Common.setStyle = function(){
 	$("#dttabs").css("height",height - 22);
 	$("#dtfragment-1").css("height",height - 88);
 	$("#dtfragment-2").css("height",height - 88);
+	$("#window-waiting").css({
+		"top": (height - 10) / 2,
+		"left": (width - 175) / 2
+	});
 	
 	var window_h = 400;
 	if(height > 400){

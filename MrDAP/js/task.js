@@ -74,7 +74,9 @@ Task.loadList = function(){
 				}
 			}
 			
-			$("#tslist-table").DataTable();
+			$("#tslist-table").DataTable({
+				paging: false
+			});
 			
 			/*****refresh list*****/
 //			console.log(Common.refresh_id);
@@ -526,7 +528,8 @@ Task.loadTable = function(tstype_id){
 			}
 			
 			$("#window-table").DataTable({
-				ordering: false
+				ordering: false,
+				paging: false
 			});
 		}).fail(function(){
 			alert("Oops, we got an error...");
@@ -596,6 +599,7 @@ Task.run = function(){
 //	console.log(params);
 	
 	$("#background").css("display","block");
+	$("#window-waiting").css("display","block");
 	/*****run task*****/
 	$.getJSON(URL.runTask() + "?jsoncallback=?",{
 		"typeId": typeId,
@@ -604,6 +608,7 @@ Task.run = function(){
 	}).done(function(data){
 //			console.log(data);
 			$("#background").css("display","none");
+			$("#window-waiting").css("display","none");
 			/*****alert info*****/
 			if(data.status === "RUNNING"){
 				alert("成功新建任务!");
@@ -615,6 +620,7 @@ Task.run = function(){
 			}
 		}).fail(function(){
 			alert("Oops, we got an error...");
+			$("#background").css("display","none");
 		});
 };
 
