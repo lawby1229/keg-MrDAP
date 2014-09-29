@@ -621,6 +621,7 @@ Task.run = function(){
 		}).fail(function(){
 			alert("Oops, we got an error...");
 			$("#background").css("display","none");
+			$("#window-waiting").css("display","none");
 		});
 };
 

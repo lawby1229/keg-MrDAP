@@ -62,17 +62,16 @@ Common.setStyle = function(){
 		"left": (width - 175) / 2
 	});
 	
-	var window_h = 400;
+	var height_w = 400;
 	if(height > 400){
-		window_h = 500;
+		height_w = 500;
 	}
-	
 	$("#window").css({
-		"top": (height + 165 - window_h) / 2,
+		"top": (height + 165 - height_w) / 2,
 		"left": (width - 600) / 2,
-		"height": window_h
+		"height": height_w
 	});
-	$(".window-table-cntr").css("height",window_h - 63);
+	$(".window-table-cntr").css("height",height_w - 63);
 };
 
 /*****get base url*****/
