@@ -361,7 +361,7 @@ Task.loadTypeInfo = function(){
 			table.appendTo(td);
 			
 			for(var i = 0; i < taskTypeInfo.length; i++){
-				if(i % 4 === 0){
+				if(i % 2 === 0){
 					tr = $("<tr></tr>");
 					tr.appendTo(table);
 				}
