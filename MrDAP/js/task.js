@@ -384,14 +384,13 @@ Task.loadTypeInfo = function(){
 			/*****hidden row*****/
 			for(var i = 0; i < taskTypeInfo.length; i++){
 				var args = JSON.parse(taskTypeInfo[i].args);
-				var keys = Object.keys(args);
 				
 				/*****parameter*****/
-				for(var j = 0; j < keys.length; j++){
-					var value = args[keys[j]];
+				for(var j = 0; j < args.length; j++){
+					var value = args[j];
 					tr = $("<tr></tr>");
 					tr.appendTo(selector);
-					tr.attr("id","dtfragment-1-task-type-" + taskTypeInfo[i].id + "-" + keys[j]);
+					tr.attr("id","dtfragment-1-task-type-" + taskTypeInfo[i].id + "-" + value.realName);
 					tr.css({
 						"display": "none"
 					});

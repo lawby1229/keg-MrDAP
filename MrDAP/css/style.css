@@ -16,6 +16,25 @@ body{
 	font-size: 45px;
 	font-family: Times New Roman,'微软雅黑';
 	color: #ff8040;
+	cursor: pointer;
+}
+
+/*****div#cntr*****/
+.main-cntr{
+	float: left;
+	width: 240px;
+	height: 240px;
+	border: 1px solid #ff8040;
+	font-size: 32px;
+	font-family: Times New Roman,'微软雅黑';
+	color: #ff8040;
+	cursor: pointer;
+	background-color: #eaeaea;
+}
+
+.main-cntr div{
+	margin-top: 102px;
+	margin-left: 56px;
 }
 
 /*****div#task*****/
