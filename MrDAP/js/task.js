@@ -15,6 +15,9 @@ Task.translate = {
 
 Task.loadList = function(){
 	/*****clear list*****/
+	if(Common.refresh_id != -1){
+		window.clearInterval(Common.refresh_id);
+	}
 	$("#tslist").empty();
 	$.getJSON(URL.getTaskList() + "?jsoncallback=?")
 		.done(function(data){
@@ -75,7 +78,8 @@ Task.loadList = function(){
 			}
 			
 			$("#tslist-table").DataTable({
-				paging: false
+				paging: false,
+				"order": [[0,"desc"]]
 			});
 			
 			/*****refresh list*****/
@@ -487,12 +491,17 @@ Task.loadTable = function(tstype_id){
 	
 	$.getJSON(URL.getTable() + "?jsoncallback=?" + "&id=" + tstype_id)
 		.done(function(data){
+//			console.log(data);
 			var tableList;
+			if(data === null){
+				tableList = [];
+			}else{
 			if(Common.isObject(data.jDataset)){
 				tableList = [];
 				tableList[0] = data.jDataset;
 			}else{
 				tableList = data.jDataset;
+			}
 			}
 //			console.log(tableList);
 			
@@ -511,6 +520,15 @@ Task.loadTable = function(tstype_id){
 				th.text(title[i]);
 			}
 			/*****create checkbox*****/
+			if(tableList.length === 0){
+				var tr = $("<tr></tr>");
+				tr.appendTo(tbody);
+				var td = $("<td></td>");
+				td.appendTo(tr);
+				var span = $("<span></span>");
+				span.appendTo(td);
+				span.html("该任务下暂无数据集!");
+			}else{
 			for(var i = 0; i < tableList.length; i++){
 				var tr = $("<tr></tr>");
 				tr.appendTo(tbody);
@@ -525,7 +543,7 @@ Task.loadTable = function(tstype_id){
 				span.appendTo(td);
 				span.html(tableList[i].name);
 			}
-			
+			}
 			$("#window-table").DataTable({
 				ordering: false,
 				paging: false

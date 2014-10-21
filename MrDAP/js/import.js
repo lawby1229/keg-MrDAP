@@ -78,7 +78,7 @@ Import.loadData = function(){
 				Import.loadRunningList();
 			}
 			if(data.status === "FAILED"){
-				alert(data.msg);
+				alert("路径不正确!");
 			}
 		}).fail(function(){
 			alert("Oops, we got an error...");
@@ -86,6 +86,9 @@ Import.loadData = function(){
 };
 
 Import.loadRunningList = function(){
+	if(Common.refresh_id != -1){
+		window.clearInterval(Common.refresh_id);
+	}
 $("#dtfragment-1").empty();
 	$.getJSON(URL.importList() + "?jsoncallback=?")
 		.done(function(data){
@@ -215,6 +218,7 @@ $("#dtfragment-2").empty();
 				td.html(html);
 			}
 			$("#dtfragment-2-table").DataTable({
+				"order": [[0,"desc"]]
 			});
 		}).fail(function(){
 			alert("Oops, we got an error...");
