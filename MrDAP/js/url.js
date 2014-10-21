@@ -69,3 +69,7 @@ URL.deleteList = function(){
 URL.stopList = function(){
 	return URL.head + "/rest/load/kill";
 };
+
+URL.getPath = function(){
+	return URL.head + "/rest/load/path";
+};

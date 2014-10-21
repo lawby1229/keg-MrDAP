@@ -2,25 +2,16 @@ Import = {};
 
 Import.loadModule = function(){
 	var cntr = $("#tslist");
+	
 	var table = $("<table></table>");
 	table.appendTo(cntr);
 	table.css({
 		"width": cntr.width()
 	});
+	
 	var tr = $("<tr></tr>");
 	tr.appendTo(table);
 	var td = $("<td></td>");
-	td.appendTo(tr);
-	td.text("输入文件路径");
-	td = $("<td></td>");
-	td.appendTo(tr);
-	var input = $("<input/>");
-	input.appendTo(td);
-	input.attr("type","text");
-	
-	tr = $("<tr></tr>");
-	tr.appendTo(table);
-	td = $("<td></td>");
 	td.appendTo(tr);
 	td.text("选择文件类别");
 	td = $("<td></td>");
@@ -36,37 +27,58 @@ Import.loadModule = function(){
 	option.attr("value","MRS");
 	option.text("MRS");
 	
+	td = $("<td></td>");
+	td.appendTo(tr);
 	var button = $("<input/>");
-	button.appendTo(cntr);
+	button.appendTo(td);
 	button.attr("type","button");
 	button.attr("value","导入数据");
 	button.attr("onclick","Import.loadData();");
+	tr = $("<tr></tr>");
+	tr.appendTo(table);
+	td = $("<td></td>");
+	td.appendTo(tr);
+	td.text("选择文件夹");
+	td = $("<td></td>");
+	td.appendTo(tr);
+	td = $("<td></td>");
+	td.appendTo(tr);
+	
+	var div = $("<div></div>");
+	div.appendTo(cntr);
+	var title = $("<div></div>");
+	title.appendTo(div);
+	var tableCntr = $("<div></div>");
+	tableCntr.appendTo(div);
+	Import.loadPath(".");
+
+	
 };
 
 Import.loadData = function(){
-	var tr = $("#tslist").children("table").children("tbody").children("tr");
-	
-	var input = tr.eq(0).children("td").eq(1).children("input").val();
-	console.log(input);
-	if(input === ""){
-		alert("必须输入文件路径!");
-		return;
+	var input = $("input[name='tslist-radio']:checked").val();
+	if(input === undefined){
+	alert("必须选择文件夹!");
+	return;
 	}
 	
-	var type = tr.eq(1).children("td").eq(1).children("select").val();
-	console.log(type);
+//	console.log(input);
+	
+	var tr = $("#tslist").children("table").children("tbody").children("tr").eq(0);;
+	var type = tr.children("td").eq(1).children("select").val();
+//	console.log(type);
 	
 	$.getJSON(URL.importData() + "?jsoncallback=?&input=" + input + "&type=" + type)
 		.done(function(data){
-			console.log(data);
+//			console.log(data);
 			/*****alert info*****/
 			if(data.status === "OK"){
-				alert("成功新建任务!");
+				alert("开始导入数据!");
 				/*****reload task list*****/
 				Import.loadRunningList();
 			}
 			if(data.status === "FAILED"){
-				alert("新建任务失败!");
+				alert(data.msg);
 			}
 		}).fail(function(){
 			alert("Oops, we got an error...");
@@ -77,7 +89,7 @@ Import.loadRunningList = function(){
 $("#dtfragment-1").empty();
 	$.getJSON(URL.importList() + "?jsoncallback=?")
 		.done(function(data){
-			console.log(data);
+//			console.log(data);
 			if(data === null){
 				data = [];
 			}
@@ -151,7 +163,7 @@ Import.loadSuccessList = function(){
 $("#dtfragment-2").empty();
 	$.getJSON(URL.importSuceessList() + "?jsoncallback=?")
 		.done(function(data){
-			console.log(data);
+//			console.log(data);
 			if(data === null){
 				data = [];
 			}
@@ -212,7 +224,7 @@ $("#dtfragment-2").empty();
 Import.loadProcess = function(id){
 	$.getJSON(URL.importProcess() + "?jsoncallback=?&id=" + id)
 		.done(function(data){
-			console.log(data.status);
+//			console.log(data.status);
 			$("#" + id).percentageLoader({width: 100, height: 100, controllable : false, progress : data.status,value: ""});
 		}).fail(function(){
 			alert("Oops, we got an error...");
@@ -236,7 +248,7 @@ Import.refreshStatus = function(index){
 		return;
 	}
 	var status = td.children("div").children("div").children("div").eq(0).text();
-	console.log(status);
+//	console.log(status);
 	if(status === "100%"){
 		Import.loadRunningList();
 		Import.loadSuccessList();
@@ -272,6 +284,89 @@ Import.remove = function(ts_id){
 //			alert("成功删除数据集!");
 			/*****reload task list*****/
 			Import.loadSuccessList();
+		}).fail(function(){
+			alert("Oops, we got an error...");
+		});
+};
+
+Import.loadPath = function(tstype_id){
+	var div = $("#tslist").children("div").eq(0).children("div");
+	var title = div.eq(0);
+	title.empty();
+	var tableCntr = div.eq(1);
+	tableCntr.empty();
+	var table = $("<table></table>");
+	table.appendTo(tableCntr);
+	tableCntr.css({
+		"text-align": "left",
+		"padding-left": "60px"
+	});
+	
+	$.getJSON(URL.getPath() + "?jsoncallback=?" + "&path=" + tstype_id)
+		.done(function(data){
+//			console.log(data);
+			var span = $("<span>目录" + data.parent + "</span>");
+			span.appendTo(title);
+			
+			if(data.parent !== "/"){
+				var tr = $("<tr></tr>");
+				tr.appendTo(table);
+				
+				var td = $("<td></td>");
+				td.appendTo(tr);
+				var span = $("<span></span>");
+				span.appendTo(td);
+				span.html("上级目录");
+				span.attr("onclick","Import.loadPath(\"" + data.parent + "/..\")");
+				span.css({
+					"cursor": "pointer",
+					"text-decoration": "underline",
+					"color": "blue"
+				});
+			}
+			
+			for(var i = 0; i < data.list.length; i++){
+				var tr = $("<tr></tr>");
+				tr.appendTo(table);
+				
+				var td = $("<td></td>");
+				td.appendTo(tr);
+				
+					
+					if((data.list[i].isFile === "true") || (data.list[i].isReadable === "false")){
+						var span = $("<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>");
+						span.appendTo(td);
+					}else{
+						var radio = $("<input/>");
+					radio.appendTo(td);
+					radio.attr("type","radio");
+					radio.attr("name","tslist-radio");
+						if(data.parent !== "/"){
+							radio.attr("value",data.parent + "/" + data.list[i].name);
+						}else{
+							radio.attr("value",data.parent + data.list[i].name);
+						}
+					}
+				
+				var span = $("<span></span>");
+				span.appendTo(td);
+				span.html(data.list[i].name);
+				if(data.list[i].isFile === "false"){
+					if(data.list[i].isReadable === "true"){
+					if(data.parent !== "/"){
+						span.attr("onclick","Import.loadPath(\"" + data.parent + "/" + data.list[i].name + "\")");
+					}else{
+						span.attr("onclick","Import.loadPath(\"" + data.parent + data.list[i].name + "\")");
+					}
+					}
+					span.css({
+					
+					"text-decoration": "underline"
+					});
+					if(data.list[i].isReadable === "true"){span.css({"cursor": "pointer","color": "blue"});
+					}
+				}
+			}
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
