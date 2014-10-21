@@ -99,12 +99,10 @@ Import.loadData = function(){
 };
 
 Import.loadRunningList = function(){
-	if(Common.refresh_id != -1){
-		window.clearInterval(Common.refresh_id);
-	}
-$("#dtfragment-1").empty();
+
 	$.getJSON(URL.importList() + "?jsoncallback=?")
 		.done(function(data){
+			$("#dtfragment-1").empty();
 //			console.log(data);
 			if(data === null){
 				data = [];
@@ -176,9 +174,10 @@ $("#dtfragment-1").empty();
 };
 
 Import.loadSuccessList = function(){
-$("#dtfragment-2").empty();
+
 	$.getJSON(URL.importSuceessList() + "?jsoncallback=?")
 		.done(function(data){
+		$("#dtfragment-2").empty();
 //			console.log(data);
 			if(data === null){
 				data = [];

@@ -15,12 +15,9 @@ Task.translate = {
 
 Task.loadList = function(){
 	/*****clear list*****/
-	if(Common.refresh_id != -1){
-		window.clearInterval(Common.refresh_id);
-	}
-	$("#tslist").empty();
 	$.getJSON(URL.getTaskList() + "?jsoncallback=?")
 		.done(function(data){
+			$("#tslist").empty();
 			var tsdata;
 			if(data === null){
 				tsdata = [];
@@ -483,14 +480,15 @@ Task.refreshType = function(){
 
 Task.loadTable = function(tstype_id){
 	var cntr = $(".window-table-cntr");
-	cntr.empty();
+	
+	
+	$.getJSON(URL.getTable() + "?jsoncallback=?" + "&id=" + tstype_id)
+		.done(function(data){
+			cntr.empty();
 	var table = $("<table></table>");
 	table.appendTo(cntr);
 	table.attr("id","window-table");
 	table.attr("class","display");
-	
-	$.getJSON(URL.getTable() + "?jsoncallback=?" + "&id=" + tstype_id)
-		.done(function(data){
 //			console.log(data);
 			var tableList;
 			if(data === null){
@@ -589,7 +587,7 @@ Task.closeWindow = function(){
 		table.appendTo(td);
 		var tr;
 		for(var i = 0; i < checkbox.length; i++){
-			if(i % 3 === 0){
+			if(i % 1 === 0){
 				tr = $("<tr></tr>");
 				tr.appendTo(table);
 			}
