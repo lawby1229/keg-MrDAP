@@ -542,6 +542,10 @@ Task.loadTable = function(tstype_id){
 				var span = $("<span></span>");
 				span.appendTo(td);
 				span.html(tableList[i].name);
+				span.attr("onclick","Task.chooseCheckbox(" + i + ")");
+				span.css({
+					"cursor": "pointer"
+				});
 			}
 			}
 			$("#window-table").DataTable({
@@ -551,6 +555,15 @@ Task.loadTable = function(tstype_id){
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
+};
+
+Task.chooseCheckbox = function(i){
+	var input = $("input[name='window-checkbox']").eq(i);
+	if(input.prop("checked") === true){
+		input.prop("checked",false);
+	}else{
+		input.prop("checked",true);
+	}
 };
 
 /*****open window*****/

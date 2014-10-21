@@ -38,9 +38,12 @@ Import.loadModule = function(){
 	tr.appendTo(table);
 	td = $("<td></td>");
 	td.appendTo(tr);
-	td.text("选择文件夹");
+	td.text("选择目标文件夹");
 	td = $("<td></td>");
 	td.appendTo(tr);
+	var input = $("<input/>");
+	input.appendTo(td);
+	input.attr("type","text");
 	td = $("<td></td>");
 	td.appendTo(tr);
 	
@@ -51,18 +54,17 @@ Import.loadModule = function(){
 	var tableCntr = $("<div></div>");
 	tableCntr.appendTo(div);
 	Import.loadPath(".");
-
-	
 };
 
 Import.loadData = function(){
-	var input = $("input[name='tslist-radio']:checked").val();
-	if(input === undefined){
-	alert("必须选择文件夹!");
+	var tr = $("#tslist").children("table").children("tbody").children("tr").eq(1);
+	var input = tr.children("td").eq(1).children("input").val();
+//	console.log(input);
+	if(input === ""){
+	alert("必须选择目标文件夹!");
 	return;
 	}
 	
-//	console.log(input);
 	
 	var tr = $("#tslist").children("table").children("tbody").children("tr").eq(0);;
 	var type = tr.children("td").eq(1).children("select").val();
@@ -303,7 +305,8 @@ Import.loadPath = function(tstype_id){
 	table.appendTo(tableCntr);
 	tableCntr.css({
 		"text-align": "left",
-		"padding-left": "60px"
+		"padding-left": "60px",
+		"width": "auto"
 	});
 	
 	$.getJSON(URL.getPath() + "?jsoncallback=?" + "&path=" + tstype_id)
@@ -346,9 +349,9 @@ Import.loadPath = function(tstype_id){
 					radio.attr("type","radio");
 					radio.attr("name","tslist-radio");
 						if(data.parent !== "/"){
-							radio.attr("value",data.parent + "/" + data.list[i].name);
+							radio.attr("onclick","Import.showText(\"" + data.parent + "/" + data.list[i].name + "\")");
 						}else{
-							radio.attr("value",data.parent + data.list[i].name);
+							radio.attr("onclick","Import.showText(\"" + data.parent + data.list[i].name + "\")");
 						}
 					}
 				
@@ -374,4 +377,11 @@ Import.loadPath = function(tstype_id){
 		}).fail(function(){
 			alert("Oops, we got an error...");
 		});
+};
+
+Import.showText = function(path){
+	var tr = $("#tslist").children("table").children("tbody").children("tr").eq(1);
+	var input = tr.children("td").eq(1).children("input");
+	input.attr("value",path);
+//	console.log(path);
 };
