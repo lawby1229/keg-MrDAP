@@ -6,7 +6,8 @@ Import.loadModule = function(){
 	var table = $("<table></table>");
 	table.appendTo(cntr);
 	table.css({
-		"width": cntr.width()
+		"width": cntr.width() - 10,
+		"padding-bottom": "10px"
 	});
 	
 	var tr = $("<tr></tr>");
@@ -16,6 +17,9 @@ Import.loadModule = function(){
 	td.text("选择文件类别");
 	td = $("<td></td>");
 	td.appendTo(tr);
+	td.css({
+		"text-align": "left"
+	});
 	var select = $("<select></select>");
 	select.appendTo(td);
 	var option = $("<option></option>");
@@ -27,13 +31,6 @@ Import.loadModule = function(){
 	option.attr("value","MRS");
 	option.text("MRS");
 	
-	td = $("<td></td>");
-	td.appendTo(tr);
-	var button = $("<input/>");
-	button.appendTo(td);
-	button.attr("type","button");
-	button.attr("value","导入数据");
-	button.attr("onclick","Import.loadData();");
 	tr = $("<tr></tr>");
 	tr.appendTo(table);
 	td = $("<td></td>");
@@ -41,14 +38,28 @@ Import.loadModule = function(){
 	td.text("选择目标文件夹");
 	td = $("<td></td>");
 	td.appendTo(tr);
+	td.css({
+		"text-align": "left"
+	});
 	var input = $("<input/>");
 	input.appendTo(td);
 	input.attr("type","text");
-	td = $("<td></td>");
-	td.appendTo(tr);
+	input.css({
+		"width": td.width()
+	});
+	
+	var button = $("<input/>");
+	button.appendTo(cntr);
+	button.attr("type","button");
+	button.attr("value","导入数据");
+	button.attr("onclick","Import.loadData();");
+	
 	
 	var div = $("<div></div>");
 	div.appendTo(cntr);
+	div.css({
+		"padding-top": "10px"
+	});
 	var title = $("<div></div>");
 	title.appendTo(div);
 	var tableCntr = $("<div></div>");
@@ -305,8 +316,8 @@ Import.loadPath = function(tstype_id){
 	table.appendTo(tableCntr);
 	tableCntr.css({
 		"text-align": "left",
-		"padding-left": "60px",
-		"width": "auto"
+		"padding-left": "40px",
+		"width": "340px"
 	});
 	
 	$.getJSON(URL.getPath() + "?jsoncallback=?" + "&path=" + tstype_id)
